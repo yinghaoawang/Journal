@@ -13,7 +13,7 @@ const getBaseUrl = () => {
 };
 
 /** A set of type-safe react-query hooks for your tRPC API. */
-export const api = createTRPCNext<AppRouter>({
+export const trpc = createTRPCNext<AppRouter>({
   config() {
     return {
       transformer: superjson,
