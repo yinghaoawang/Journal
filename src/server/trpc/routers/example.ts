@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { router, procedure } from '~/server/api/trpc';
+import { router, procedure } from '~/server/trpc/trpc';
 
 export const exampleRouter = router({
   hello: procedure.input(z.object({ text: z.string() })).query(({ input }) => {
