@@ -1,9 +1,10 @@
 import Head from 'next/head';
 import { trpc } from '~/utils/trpc';
+import { useUser, SignInButton, SignOutButton } from '@clerk/nextjs';
 
 export default function Home() {
-  const hello = trpc.example.hello.useQuery({ text: 'from tRPC' });
-
+  const posts = trpc.posts.getAll.useQuery();
+  const user = useUser();
   return (
     <>
       <Head>
@@ -11,13 +12,15 @@ export default function Home() {
         <meta name="description" content="It's a Journal" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          <p className="text-2xl text-white">
-            {hello.data ? hello.data.greeting : 'Loading tRPC query...'}
-          </p>
+      <div className="bg-zinc-600">
+        {!user.isSignedIn && <SignInButton />}
+        {user.isSignedIn && <SignOutButton />}
+        <div className="text-2xl text-white">
+          {posts.data?.map((post) => {
+            return <div key={post.id}>{post.content}</div>;
+          })}
         </div>
-      </main>
+      </div>
     </>
   );
 }
