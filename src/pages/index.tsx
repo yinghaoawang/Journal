@@ -26,7 +26,7 @@ export default function Home() {
           {posts.data?.map((post) => {
             return (
               <div key={post.id}>
-                <div>Author: {post.user?.firstName ?? 'Anonymous'}</div>
+                <div>By {post.user?.firstName ?? 'Anonymous'}</div>
                 <p>{post.content}</p>
               </div>
             );

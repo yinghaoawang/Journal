@@ -7,11 +7,11 @@ export const postsRouter = router({
   getAll: procedure.query(async ({ ctx }) => {
     const posts = await ctx.db.post.findMany({ take: 100 });
     const users = await clerkClient.users.getUserList({
-      userId: posts.map((post) => post.authorId)
+      userId: posts.map((post) => post.userId)
     });
     return posts.map((post) => ({
       ...post,
-      user: users.find((u) => u.id === post.authorId)
+      user: users.find((u) => u.id === post.userId)
     }));
   })
 });
