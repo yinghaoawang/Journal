@@ -3,10 +3,9 @@ import Head from 'next/head';
 import { trpc } from '~/utils/trpc';
 import { useUser, SignInButton, SignOutButton } from '@clerk/nextjs';
 
-export default function Home() {
+export default function HomePage() {
   const posts = trpc.posts.getAll.useQuery();
   const { user, isSignedIn } = useUser();
-  console.log(posts);
   return (
     <>
       <Head>

@@ -1,5 +1,4 @@
 import { clerkClient } from '@clerk/nextjs';
-import { z } from 'zod';
 
 import { router, procedure } from '~/server/trpc/trpc';
 
