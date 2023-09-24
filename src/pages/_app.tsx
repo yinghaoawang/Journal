@@ -4,11 +4,14 @@ import { trpc } from '~/utils/trpc';
 
 import '~/styles/globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
+import Layout from '~/components/layout';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <ClerkProvider>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </ClerkProvider>
   );
 };
