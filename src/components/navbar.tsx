@@ -10,7 +10,7 @@ const logoFont = Bad_Script({ subsets: ['latin'], weight: '400' });
 export default function Navbar() {
   const { user, isSignedIn } = useUser();
   return (
-    <div className="bg-black-pearl-900 flex h-[var(--navbar-height)] items-center justify-between text-gray-200">
+    <div className="flex h-[var(--navbar-height)] items-center justify-between bg-black-pearl-900 text-gray-200">
       <div className="mx-5 flex space-x-5">
         <Link
           className={cn('flex items-center gap-3', logoFont.className)}

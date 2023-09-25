@@ -7,13 +7,13 @@ import SuperJSON from 'superjson';
 import Custom404Page from '../404';
 
 const UserPage: NextPage<{ id: string }> = ({ id }) => {
-  const user = trpc.users.byId.useQuery({ userId: id });
+  const userRes = trpc.users.getById.useQuery({ userId: id });
 
-  if (user?.data == null) return <Custom404Page />;
+  if (userRes?.data == null) return <Custom404Page />;
 
   return (
     <>
-      <p>User: {user?.data?.firstName}</p>
+      <p>User: {userRes.data.firstName}</p>
     </>
   );
 };
@@ -21,14 +21,14 @@ const UserPage: NextPage<{ id: string }> = ({ id }) => {
 export const getStaticProps: GetStaticProps = async (context) => {
   const helpers = createServerSideHelpers({
     router: appRouter,
-    ctx: { db },
+    ctx: { db, userId: null },
     transformer: SuperJSON
   });
 
   const slug = context.params?.slug;
   if (typeof slug !== 'string') throw new Error('No slug');
 
-  await helpers.users.byId.prefetch({ userId: slug });
+  await helpers.users.getById.prefetch({ userId: slug });
 
   return {
     props: {

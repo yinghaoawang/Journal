@@ -2,11 +2,11 @@
  * 1. You want to modify request context
  * 2. You want to create a new middleware or type of procedure
  */
-import { initTRPC } from '@trpc/server';
+import { TRPCError, initTRPC } from '@trpc/server';
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
 import SuperJSON from 'superjson';
 import { ZodError } from 'zod';
-
+import { getAuth } from '@clerk/nextjs/server';
 import { db } from '~/server/db';
 
 type CreateContextOptions = Record<string, never>;
@@ -18,7 +18,12 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
 };
 
 export const createTRPCContext = (_opts: CreateNextContextOptions) => {
-  return createInnerTRPCContext({});
+  const { req } = _opts;
+  const session = getAuth(req);
+  return {
+    ...createInnerTRPCContext({}),
+    userId: session?.userId
+  };
 };
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
@@ -34,6 +39,21 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
   }
 });
 
+const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
+  if (!ctx.userId) {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED'
+    });
+  }
+
+  return next({
+    ctx: {
+      userId: ctx.userId
+    }
+  });
+});
+
 export const router = t.router;
 
-export const procedure = t.procedure;
+export const publicProcedure = t.procedure;
+export const privateProcedure = t.procedure.use(enforceUserIsAuthed);
