@@ -1,9 +1,10 @@
+import ContentWrapper from '~/components/content-wrapper';
 import { trpc } from '~/utils/trpc';
 
 export default function HomePage() {
   const posts = trpc.posts.getAll.useQuery();
   return (
-    <div className="text-2xl">
+    <ContentWrapper className="text-2xl">
       {posts.data?.map((post) => {
         return (
           <div key={post.id}>
@@ -12,6 +13,6 @@ export default function HomePage() {
           </div>
         );
       })}
-    </div>
+    </ContentWrapper>
   );
 }
