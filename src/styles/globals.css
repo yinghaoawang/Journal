@@ -5,8 +5,28 @@
 :root {
   --navbar-height: 60px;
   --footer-height: 60px;
+  --j-line-height: 2.6em;
+  --j-line-offset: 0.6em;
+  --j-line-size: 2px;
+  --j-line-color: lightgray;
 }
 
 body {
   @apply min-h-screen bg-gray-200;
+}
+
+.journal-lines {
+  line-height: var(--j-line-height);
+  padding: var(--j-line-height);
+  padding-block: 0;
+  background: repeating-linear-gradient(
+      to bottom,
+      transparent 0 calc(var(--j-line-height) - var(--j-line-offset)),
+      var(--j-line-color) calc(var(--j-line-height) - var(--j-line-offset))
+        calc(var(--j-line-height) - var(--j-line-offset) + var(--j-line-size)),
+      transparent
+        calc(var(--j-line-height) - var(--j-line-offset) + var(--j-line-size))
+        var(--j-line-height)
+    )
+    50% 0 / calc(100% - var(--j-line-height) * 2) 100% no-repeat;
 }

@@ -8,11 +8,13 @@ import Custom404Page from '../404';
 import ContentWrapper from '~/components/content-wrapper';
 import { LoadingPage, LoadingSpinner } from '~/components/loading';
 import type { User } from '@clerk/nextjs/dist/types/server';
-import Image from 'next/image';
 import dayjs from '~/utils/dayjs';
 
-const PostsView = ({ user }: { user: User }) => {
-  const postsRes = trpc.posts.getByUserId.useQuery({ userId: user.id });
+const JournalView = ({ user }: { user: User }) => {
+  const postsRes = trpc.posts.getByUserId.useQuery({
+    userId: user.id,
+    orderBy: 'desc'
+  });
   if (postsRes.isLoading) {
     return <LoadingSpinner />;
   }
@@ -22,23 +24,12 @@ const PostsView = ({ user }: { user: User }) => {
   return (
     <>
       {posts?.map((post) => (
-        <div className="flex gap-3" key={post.id}>
-          <div className="pt-1">
-            <Image
-              className="rounded-full"
-              width={40}
-              height={40}
-              src={user?.imageUrl ?? '/default-avatar.png'}
-              alt="Profile picture"
-            />
-          </div>
-          <div>
-            <div>
-              By {user?.firstName ?? 'Anonymous'}{' '}
-              <span className="font-light text-gray-600">
-                {dayjs(post.createdAt).fromNow()}
-              </span>
-            </div>
+        <div className="my-5 flex flex-col" key={post.id}>
+          <div className="journal-lines whitespace-pre-wrap">
+            <p className="font-light text-gray-600">
+              {dayjs(post.createdAt).format('MMMM DD, YYYY')}
+            </p>
+            <p>Dear Journal,</p>
             <p>{post.content}</p>
           </div>
         </div>
@@ -62,9 +53,10 @@ const UserPage: NextPage<{ id: string }> = ({ id }) => {
 
   return (
     <ContentWrapper>
-      <p>User: {user.firstName}</p>
-      <h2>Journal Entries</h2>
-      <PostsView user={user} />
+      <h2 className="text-2lg font-bold">
+        {user.firstName}&apos;s Journal Entries
+      </h2>
+      <JournalView user={user} />
     </ContentWrapper>
   );
 };

@@ -27,13 +27,17 @@ export const postsRouter = router({
   getByUserId: publicProcedure
     .input(
       z.object({
-        userId: z.string()
+        userId: z.string(),
+        orderBy: z.enum(['asc', 'desc']).optional().default('asc')
       })
     )
     .query(async ({ ctx, input }) => {
       const posts = await ctx.db.post.findMany({
         where: {
           userId: input.userId
+        },
+        orderBy: {
+          createdAt: input.orderBy
         }
       });
       return posts;
