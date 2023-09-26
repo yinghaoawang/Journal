@@ -24,6 +24,20 @@ export const postsRouter = router({
       user: users.find((u) => u.id === post.userId)
     }));
   }),
+  getByUserId: publicProcedure
+    .input(
+      z.object({
+        userId: z.string()
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const posts = await ctx.db.post.findMany({
+        where: {
+          userId: input.userId
+        }
+      });
+      return posts;
+    }),
   create: privateProcedure
     .input(
       z.object({

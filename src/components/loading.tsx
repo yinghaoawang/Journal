@@ -2,7 +2,7 @@ import ContentWrapper from './content-wrapper';
 
 export function LoadingSpinner({ size }: { size?: number }) {
   return (
-    <div role="status">
+    <div className="flex items-center justify-center" role="status">
       <svg
         aria-hidden="true"
         className="animate-spin fill-gray-600 text-gray-200 dark:fill-gray-300 dark:text-gray-600"

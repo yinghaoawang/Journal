@@ -1,12 +1,8 @@
 import ContentWrapper from '~/components/content-wrapper';
 import { trpc } from '~/utils/trpc';
-
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import Image from 'next/image';
 import { LoadingPage } from '~/components/loading';
-
-dayjs.extend(relativeTime);
+import dayjs from '~/utils/dayjs';
 
 export default function HomePage() {
   const posts = trpc.posts.getAll.useQuery();
