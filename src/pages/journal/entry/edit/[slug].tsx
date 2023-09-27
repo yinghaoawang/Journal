@@ -33,7 +33,7 @@ function EditPostView({ post }: { post: Post }) {
   return (
     <ContentWrapper>
       <div className="flex flex-col">
-        <h2 className="text-lg font-bold">New Journal Post</h2>
+        <h2 className="text-lg font-bold">Editing Journal Post</h2>
         <div className="journal-lines my-5 whitespace-pre-wrap">
           <p className="font-light text-gray-600">
             {dayjs(post.createdAt).format('MMMM DD, YYYY')}
