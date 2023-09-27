@@ -1,8 +1,9 @@
-import type { ChangeEvent } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
 import ContentWrapper from '~/components/content-wrapper';
 import { useState } from 'react';
 import { trpc } from '~/utils/trpc';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 import dayjs from '~/utils/dayjs';
 
 export default function JournalPage() {
@@ -12,6 +13,14 @@ export default function JournalPage() {
     onSuccess: () => {
       setTextInput('');
       router.push('/journal');
+    },
+    onError: (error) => {
+      const errorMessage = error.data?.zodError?.fieldErrors.content?.[0];
+      if (errorMessage) {
+        toast.error(errorMessage);
+      } else {
+        toast.error('Failed to create entry!');
+      }
     }
   });
   return (
