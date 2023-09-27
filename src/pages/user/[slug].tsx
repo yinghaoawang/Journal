@@ -11,10 +11,13 @@ import type { User } from '@clerk/nextjs/dist/types/server';
 import dayjs from '~/utils/dayjs';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { useUser } from '@clerk/nextjs';
+import type { Post } from '@prisma/client';
 
 const JournalView = ({ user }: { user: User }) => {
+  const { user: authUser } = useUser();
   const utils = trpc.useContext();
-  const postsRes = trpc.posts.getByUserId.useQuery({
+  const { data: posts, isLoading } = trpc.posts.getByUserId.useQuery({
     userId: user.id,
     orderBy: 'desc'
   });
@@ -35,7 +38,7 @@ const JournalView = ({ user }: { user: User }) => {
     }
   });
 
-  if (postsRes.isLoading) {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
@@ -48,26 +51,27 @@ const JournalView = ({ user }: { user: User }) => {
     }
   };
 
-  const posts = postsRes.data;
+  const UserActionLinks = ({ post }: { post: Post }) => {
+    return (
+      <div className="mr-5 flex justify-end gap-2">
+        <Link className="text-blue-500" href={`/journal/post/edit/${post.id}`}>
+          edit
+        </Link>
+        <button
+          onClick={() => handleDeletePostClick(post.id)}
+          className="text-blue-500"
+        >
+          delete
+        </button>
+      </div>
+    );
+  };
 
   return (
     <>
       {posts?.map((post) => (
         <div className="my-5 flex flex-col" key={post.id}>
-          <div className="mr-5 flex justify-end gap-2">
-            <Link
-              className="text-blue-500"
-              href={`/journal/post/edit/${post.id}`}
-            >
-              edit
-            </Link>
-            <button
-              onClick={() => handleDeletePostClick(post.id)}
-              className="text-blue-500"
-            >
-              delete
-            </button>
-          </div>
+          {user.id === authUser?.id && <UserActionLinks post={post} />}
           <div className="journal-lines whitespace-pre-wrap">
             <p className="font-light text-gray-600">
               {dayjs(post.createdAt).format('MMMM DD, YYYY')}
@@ -82,17 +86,15 @@ const JournalView = ({ user }: { user: User }) => {
 };
 
 const UserPage: NextPage<{ id: string }> = ({ id }) => {
-  const userRes = trpc.users.getById.useQuery({ userId: id });
+  const { data: user, isLoading } = trpc.users.getById.useQuery({ userId: id });
 
-  if (userRes.data == null) {
-    if (userRes.isLoading) {
+  if (user == null) {
+    if (isLoading) {
       return <LoadingPage />;
     } else {
       return <Custom404Page />;
     }
   }
-
-  const user = userRes.data;
 
   return (
     <ContentWrapper>
