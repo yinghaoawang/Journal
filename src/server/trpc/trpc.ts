@@ -20,11 +20,10 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
 
 export const createTRPCContext = (_opts: CreateNextContextOptions) => {
   const { req } = _opts;
-  const { userId, user } = getAuth(req);
+  const { userId } = getAuth(req);
   return {
     ...createInnerTRPCContext({}),
-    userId,
-    user
+    userId
   };
 };
 
