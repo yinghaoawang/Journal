@@ -13,6 +13,7 @@ import Custom404Page from '~/pages/404';
 import type { Post } from '@prisma/client';
 import toast from 'react-hot-toast';
 import AutoResizingTextArea from '~/components/resizing-text-area';
+import { useUser } from '@clerk/nextjs';
 
 function EditPostView({ post }: { post: Post }) {
   const router = useRouter();
@@ -57,26 +58,33 @@ function EditPostView({ post }: { post: Post }) {
         disabled={isPosting}
       >
         {isPosting && <LoadingSpinner size={20} />}
-        {!isPosting && 'Create Post'}
+        {!isPosting && 'Update Post'}
       </button>
     </ContentWrapper>
   );
 }
 
 const EditPostPage: NextPage<{ id: string }> = ({ id }) => {
+  const { user } = useUser();
   const postRes = trpc.posts.getById.useQuery({ id });
+  const { data: post, isLoading } = postRes;
 
-  if (postRes.data == null) {
-    if (postRes.isLoading) {
+  if (post == null) {
+    if (isLoading) {
       return <LoadingPage />;
     } else {
       return <Custom404Page />;
     }
   }
 
+  if (post.userId != user?.id) {
+    console.error('Unautorized');
+    return <Custom404Page />;
+  }
+
   return (
     <ContentWrapper>
-      <EditPostView post={postRes.data} />
+      <EditPostView post={post} />
     </ContentWrapper>
   );
 };
