@@ -15,7 +15,7 @@ export default function JournalView({ user }: { user: User }) {
     orderBy: 'desc'
   });
 
-  const { mutate } = trpc.posts.delete.useMutation({
+  const { mutate: deletePost } = trpc.posts.delete.useMutation({
     onSuccess: () => {
       toast.success('Post deleted successfully!');
       void utils.posts.invalidate();
@@ -40,7 +40,7 @@ export default function JournalView({ user }: { user: User }) {
       'Are you sure you want to delete this post?'
     );
     if (confirmed) {
-      mutate({ id });
+      deletePost({ id });
     }
   };
 
