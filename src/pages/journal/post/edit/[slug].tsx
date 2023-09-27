@@ -3,71 +3,17 @@ import { createServerSideHelpers } from '@trpc/react-query/server';
 import { trpc } from '~/utils/trpc';
 import { appRouter } from '~/server/trpc/root';
 import { db } from '~/server/db';
-import SuperJSON from 'superjson';
+import superjson from 'superjson';
 import ContentWrapper from '~/components/content-wrapper';
-import { LoadingPage, LoadingSpinner } from '~/components/loading';
-import dayjs from '~/utils/dayjs';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { LoadingPage } from '~/components/loading';
+import MutatePostView from '~/components/mutate-post-view';
 import Custom404Page from '~/pages/404';
-import type { Post } from '@prisma/client';
-import toast from 'react-hot-toast';
-import AutoResizingTextArea from '~/components/resizing-text-area';
 import { useUser } from '@clerk/nextjs';
-
-function EditPostView({ post }: { post: Post }) {
-  const router = useRouter();
-  const [textInput, setTextInput] = useState(post.content);
-  const { mutate, isLoading: isPosting } = trpc.posts.update.useMutation({
-    onSuccess: () => {
-      setTextInput('');
-      router.push('/journal');
-    },
-    onError: (error) => {
-      const errorMessage = error.data?.zodError?.fieldErrors.content?.[0];
-      if (errorMessage) {
-        toast.error(errorMessage);
-      } else {
-        toast.error('Failed to update post!');
-      }
-    }
-  });
-
-  return (
-    <ContentWrapper>
-      <div className="flex flex-col">
-        <h2 className="text-lg font-bold">Editing Journal Post</h2>
-        <div className="journal-lines my-5 whitespace-pre-wrap">
-          <p className="font-light text-gray-600">
-            {dayjs(post.createdAt).format('MMMM DD, YYYY')}
-          </p>
-          <p>Dear Journal,</p>
-          <AutoResizingTextArea
-            className="journal-lines w-full resize-none !p-0"
-            input={textInput}
-            setInput={setTextInput}
-            disabled={isPosting}
-          />
-        </div>
-      </div>
-      <button
-        className="flex w-40 items-center justify-center rounded-lg bg-black-pearl-600 p-4 text-white"
-        onClick={() => {
-          mutate({ id: post.id, content: textInput });
-        }}
-        disabled={isPosting}
-      >
-        {isPosting && <LoadingSpinner size={20} />}
-        {!isPosting && 'Update Post'}
-      </button>
-    </ContentWrapper>
-  );
-}
 
 const EditPostPage: NextPage<{ id: string }> = ({ id }) => {
   const { user } = useUser();
-  const postRes = trpc.posts.getById.useQuery({ id });
-  const { data: post, isLoading } = postRes;
+  const { data: post, isLoading } = trpc.posts.getById.useQuery({ id });
+  const  = postRes;
 
   if (post == null) {
     if (isLoading) {
@@ -78,13 +24,13 @@ const EditPostPage: NextPage<{ id: string }> = ({ id }) => {
   }
 
   if (post.userId != user?.id) {
-    console.error('Unautorized');
+    console.error('Unauthorized');
     return <Custom404Page />;
   }
 
   return (
     <ContentWrapper>
-      <EditPostView post={post} />
+      <MutatePostView type="update" post={post} />
     </ContentWrapper>
   );
 };
@@ -93,7 +39,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: { db, userId: null },
-    transformer: SuperJSON
+    transformer: superjson
   });
 
   const slug = context.params?.slug;

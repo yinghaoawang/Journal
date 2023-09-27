@@ -18,7 +18,7 @@ export default function JournalView({ user }: { user: User }) {
   const { mutate } = trpc.posts.delete.useMutation({
     onSuccess: () => {
       toast.success('Post deleted successfully!');
-      void utils.posts.getByUserId.invalidate({ userId: user.id });
+      void utils.posts.invalidate();
     },
     onError: (error) => {
       console.log(error);
