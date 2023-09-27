@@ -1,23 +1,14 @@
-import type { ChangeEvent, KeyboardEvent } from 'react';
 import ContentWrapper from '~/components/content-wrapper';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { trpc } from '~/utils/trpc';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import dayjs from '~/utils/dayjs';
 import { LoadingSpinner } from '~/components/loading';
-
-export const resizeTextArea = (
-  textArea: HTMLTextAreaElement | null | undefined
-) => {
-  if (textArea == null) return;
-  textArea.style.height = 'auto';
-  textArea.style.height = textArea.scrollHeight + 'px';
-};
+import AutoResizingTextArea from '~/components/resizing-text-area';
 
 export default function JournalPage() {
   const router = useRouter();
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [textInput, setTextInput] = useState('');
   const { mutate, isLoading: isPosting } = trpc.posts.create.useMutation({
     onSuccess: () => {
@@ -33,9 +24,6 @@ export default function JournalPage() {
       }
     }
   });
-  useEffect(() => {
-    resizeTextArea(textAreaRef?.current);
-  }, [textAreaRef]);
   return (
     <ContentWrapper>
       <div className="flex flex-col">
@@ -45,15 +33,10 @@ export default function JournalPage() {
             {dayjs(Date.now()).format('MMMM DD, YYYY')}
           </p>
           <p>Dear Journal,</p>
-          <textarea
-            ref={textAreaRef}
-            rows={5}
+          <AutoResizingTextArea
             className="journal-lines w-full resize-none !p-0"
-            value={textInput}
-            onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-              resizeTextArea(textAreaRef?.current);
-              setTextInput(event.target.value);
-            }}
+            input={textInput}
+            setInput={setTextInput}
             disabled={isPosting}
           />
         </div>

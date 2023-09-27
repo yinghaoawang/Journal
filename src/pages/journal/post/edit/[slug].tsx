@@ -7,16 +7,15 @@ import SuperJSON from 'superjson';
 import ContentWrapper from '~/components/content-wrapper';
 import { LoadingPage, LoadingSpinner } from '~/components/loading';
 import dayjs from '~/utils/dayjs';
-import { type ChangeEvent, useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Custom404Page from '~/pages/404';
 import type { Post } from '@prisma/client';
 import toast from 'react-hot-toast';
-import { resizeTextArea } from '../new';
+import AutoResizingTextArea from '~/components/resizing-text-area';
 
 function EditPostView({ post }: { post: Post }) {
   const router = useRouter();
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [textInput, setTextInput] = useState(post.content);
   const { mutate, isLoading: isPosting } = trpc.posts.update.useMutation({
     onSuccess: () => {
@@ -33,10 +32,6 @@ function EditPostView({ post }: { post: Post }) {
     }
   });
 
-  useEffect(() => {
-    resizeTextArea(textAreaRef?.current);
-  }, [textAreaRef]);
-
   return (
     <ContentWrapper>
       <div className="flex flex-col">
@@ -46,15 +41,10 @@ function EditPostView({ post }: { post: Post }) {
             {dayjs(post.createdAt).format('MMMM DD, YYYY')}
           </p>
           <p>Dear Journal,</p>
-          <textarea
-            ref={textAreaRef}
-            rows={10}
+          <AutoResizingTextArea
             className="journal-lines w-full resize-none !p-0"
-            value={textInput}
-            onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-              resizeTextArea(textAreaRef?.current);
-              setTextInput(event.target.value);
-            }}
+            input={textInput}
+            setInput={setTextInput}
             disabled={isPosting}
           />
         </div>
