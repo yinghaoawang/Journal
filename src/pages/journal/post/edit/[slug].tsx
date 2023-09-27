@@ -26,7 +26,7 @@ function EditPostView({ post }: { post: Post }) {
       if (errorMessage) {
         toast.error(errorMessage);
       } else {
-        toast.error('Failed to update entry!');
+        toast.error('Failed to update post!');
       }
     }
   });
@@ -58,7 +58,7 @@ function EditPostView({ post }: { post: Post }) {
         disabled={isPosting}
       >
         {isPosting && <LoadingSpinner size={20} />}
-        {!isPosting && 'Create Entry'}
+        {!isPosting && 'Create Post'}
       </button>
     </ContentWrapper>
   );

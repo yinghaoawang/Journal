@@ -15,7 +15,11 @@ const ratelimit = new Ratelimit({
 
 export const postsRouter = router({
   getAll: publicProcedure.query(async ({ ctx }) => {
-    const posts = await ctx.db.post.findMany({ take: 100 });
+    const posts = await ctx.db.post.findMany({
+      where: {
+        deleted: false
+      }
+    });
     const users = await clerkClient.users.getUserList({
       userId: posts.map((post) => post.userId)
     });
@@ -33,7 +37,8 @@ export const postsRouter = router({
     .query(async ({ ctx, input }) => {
       const posts = await ctx.db.post.findFirst({
         where: {
-          id: input.id
+          id: input.id,
+          deleted: false
         }
       });
       return posts;
@@ -48,7 +53,8 @@ export const postsRouter = router({
     .query(async ({ ctx, input }) => {
       const posts = await ctx.db.post.findMany({
         where: {
-          userId: input.userId
+          userId: input.userId,
+          deleted: false
         },
         orderBy: {
           createdAt: input.orderBy
@@ -102,6 +108,36 @@ export const postsRouter = router({
         },
         data: {
           content: input.content
+        }
+      });
+      return post;
+    }),
+
+  delete: privateProcedure
+    .input(
+      z.object({
+        id: z.string()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+      const matchingPost = await ctx.db.post.findFirst({
+        where: {
+          id: input.id
+        }
+      });
+
+      if (matchingPost == null) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      if (matchingPost.userId != userId)
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+      const post = await ctx.db.post.update({
+        where: {
+          id: input.id
+        },
+        data: {
+          deleted: true
         }
       });
       return post;

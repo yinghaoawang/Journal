@@ -10,15 +10,43 @@ import { LoadingPage, LoadingSpinner } from '~/components/loading';
 import type { User } from '@clerk/nextjs/dist/types/server';
 import dayjs from '~/utils/dayjs';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 const JournalView = ({ user }: { user: User }) => {
+  const utils = trpc.useContext();
   const postsRes = trpc.posts.getByUserId.useQuery({
     userId: user.id,
     orderBy: 'desc'
   });
+
+  const { mutate } = trpc.posts.delete.useMutation({
+    onSuccess: () => {
+      toast.success('Post deleted successfully!');
+      void utils.posts.getByUserId.invalidate({ userId: user.id });
+    },
+    onError: (error) => {
+      console.log(error);
+      const errorMessage = error?.message;
+      if (errorMessage) {
+        toast.error(errorMessage);
+      } else {
+        toast.error('Failed to delete post!');
+      }
+    }
+  });
+
   if (postsRes.isLoading) {
     return <LoadingSpinner />;
   }
+
+  const handleDeletePostClick = (id: string) => {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this post?'
+    );
+    if (confirmed) {
+      mutate({ id });
+    }
+  };
 
   const posts = postsRes.data;
 
@@ -26,13 +54,19 @@ const JournalView = ({ user }: { user: User }) => {
     <>
       {posts?.map((post) => (
         <div className="my-5 flex flex-col" key={post.id}>
-          <div className="mr-5 flex justify-end">
+          <div className="mr-5 flex justify-end gap-2">
             <Link
               className="text-blue-500"
-              href={`/journal/entry/edit/${post.id}`}
+              href={`/journal/post/edit/${post.id}`}
             >
               edit
             </Link>
+            <button
+              onClick={() => handleDeletePostClick(post.id)}
+              className="text-blue-500"
+            >
+              delete
+            </button>
           </div>
           <div className="journal-lines whitespace-pre-wrap">
             <p className="font-light text-gray-600">

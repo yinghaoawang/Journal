@@ -20,7 +20,7 @@ export default function JournalPage() {
       if (errorMessage) {
         toast.error(errorMessage);
       } else {
-        toast.error('Failed to create entry!');
+        toast.error('Failed to create post!');
       }
     }
   });
@@ -52,7 +52,7 @@ export default function JournalPage() {
         disabled={isPosting}
       >
         {isPosting && <LoadingSpinner size={20} />}
-        {!isPosting && 'Create Entry'}
+        {!isPosting && 'Create Post'}
       </button>
     </ContentWrapper>
   );
