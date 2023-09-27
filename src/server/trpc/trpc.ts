@@ -8,6 +8,7 @@ import superjson from 'superjson';
 import { ZodError } from 'zod';
 import { getAuth } from '@clerk/nextjs/server';
 import { db } from '~/server/db';
+import { clerkClient } from '@clerk/nextjs';
 
 type CreateContextOptions = Record<string, never>;
 
@@ -19,10 +20,11 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
 
 export const createTRPCContext = (_opts: CreateNextContextOptions) => {
   const { req } = _opts;
-  const session = getAuth(req);
+  const { userId, user } = getAuth(req);
   return {
     ...createInnerTRPCContext({}),
-    userId: session?.userId
+    userId,
+    user
   };
 };
 
@@ -53,7 +55,29 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   });
 });
 
+const enforceUserIsAdmin = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.userId) {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED'
+    });
+  }
+
+  const user = await clerkClient.users.getUser(ctx.userId);
+  if (!user.privateMetadata.isAdmin) {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED'
+    });
+  }
+
+  return next({
+    ctx: {
+      userId: ctx.userId
+    }
+  });
+});
+
 export const router = t.router;
 
 export const publicProcedure = t.procedure;
 export const privateProcedure = t.procedure.use(enforceUserIsAuthed);
+export const adminProcedure = t.procedure.use(enforceUserIsAdmin);
