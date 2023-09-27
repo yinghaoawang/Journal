@@ -5,11 +5,12 @@ import { trpc } from '~/utils/trpc';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import dayjs from '~/utils/dayjs';
+import { LoadingSpinner } from '~/components/loading';
 
 export default function JournalPage() {
   const router = useRouter();
   const [textInput, setTextInput] = useState('');
-  const { mutate } = trpc.posts.create.useMutation({
+  const { mutate, isLoading: isPosting } = trpc.posts.create.useMutation({
     onSuccess: () => {
       setTextInput('');
       router.push('/journal');
@@ -39,16 +40,19 @@ export default function JournalPage() {
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
               setTextInput(event.target.value)
             }
+            disabled={isPosting}
           />
         </div>
       </div>
       <button
-        className="w-40 rounded-lg bg-black-pearl-600 p-4 text-white"
+        className="flex w-40 items-center justify-center rounded-lg bg-black-pearl-600 p-4 text-white"
         onClick={() => {
           mutate({ content: textInput });
         }}
+        disabled={isPosting}
       >
-        Create Entry
+        {isPosting && <LoadingSpinner size={20} />}
+        {!isPosting && 'Create Entry'}
       </button>
     </ContentWrapper>
   );
