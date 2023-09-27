@@ -24,6 +24,20 @@ export const postsRouter = router({
       user: users.find((u) => u.id === post.userId)
     }));
   }),
+  getById: publicProcedure
+    .input(
+      z.object({
+        id: z.string()
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const posts = await ctx.db.post.findFirst({
+        where: {
+          id: input.id
+        }
+      });
+      return posts;
+    }),
   getByUserId: publicProcedure
     .input(
       z.object({
@@ -57,6 +71,36 @@ export const postsRouter = router({
       const post = await ctx.db.post.create({
         data: {
           userId,
+          content: input.content
+        }
+      });
+      return post;
+    }),
+  update: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        content: z.string().min(1).max(5000)
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+      const matchingPost = await ctx.db.post.findFirst({
+        where: {
+          id: input.id
+        }
+      });
+
+      if (matchingPost == null) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      if (matchingPost.userId != userId)
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+      const post = await ctx.db.post.update({
+        where: {
+          id: input.id
+        },
+        data: {
           content: input.content
         }
       });

@@ -16,7 +16,7 @@ export default function ContentWrapper({
     <div className={cn('flex justify-center', outerBackground)}>
       <div
         className={cn(
-          'flex min-h-[calc(100vh-var(--navbar-height)-var(--footer-height))] w-full max-w-[700px] flex-col px-8 py-5',
+          'flex min-h-[calc(100vh-var(--navbar-height)-var(--footer-height))] w-full max-w-[700px] flex-col px-2 py-5',
           className,
           innerBackground ?? 'bg-gray-100'
         )}

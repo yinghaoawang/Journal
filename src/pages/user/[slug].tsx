@@ -9,6 +9,7 @@ import ContentWrapper from '~/components/content-wrapper';
 import { LoadingPage, LoadingSpinner } from '~/components/loading';
 import type { User } from '@clerk/nextjs/dist/types/server';
 import dayjs from '~/utils/dayjs';
+import Link from 'next/link';
 
 const JournalView = ({ user }: { user: User }) => {
   const postsRes = trpc.posts.getByUserId.useQuery({
@@ -25,6 +26,14 @@ const JournalView = ({ user }: { user: User }) => {
     <>
       {posts?.map((post) => (
         <div className="my-5 flex flex-col" key={post.id}>
+          <div className="mr-5 flex justify-end">
+            <Link
+              className="text-blue-500"
+              href={`/journal/entry/edit/${post.id}`}
+            >
+              edit
+            </Link>
+          </div>
           <div className="journal-lines whitespace-pre-wrap">
             <p className="font-light text-gray-600">
               {dayjs(post.createdAt).format('MMMM DD, YYYY')}
