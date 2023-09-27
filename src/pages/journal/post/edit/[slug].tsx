@@ -13,7 +13,6 @@ import { useUser } from '@clerk/nextjs';
 const EditPostPage: NextPage<{ id: string }> = ({ id }) => {
   const { user } = useUser();
   const { data: post, isLoading } = trpc.posts.getById.useQuery({ id });
-  const  = postRes;
 
   if (post == null) {
     if (isLoading) {

@@ -3,7 +3,7 @@ import { createServerSideHelpers } from '@trpc/react-query/server';
 import { trpc } from '~/utils/trpc';
 import { appRouter } from '~/server/trpc/root';
 import { db } from '~/server/db';
-import SuperJSON from 'superjson';
+import superjson from 'superjson';
 import Custom404Page from '../404';
 import ContentWrapper from '~/components/content-wrapper';
 import { LoadingPage } from '~/components/loading';
@@ -34,7 +34,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: { db, userId: null },
-    transformer: SuperJSON
+    transformer: superjson
   });
 
   const slug = context.params?.slug;
