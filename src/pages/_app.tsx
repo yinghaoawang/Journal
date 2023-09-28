@@ -11,9 +11,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <ClerkProvider>
       <Toaster />
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <Component {...pageProps} />
     </ClerkProvider>
   );
 };

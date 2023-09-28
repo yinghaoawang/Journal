@@ -2,8 +2,19 @@ import Head from 'next/head';
 import type { ReactNode } from 'react';
 import Navbar from './navbar';
 import Footer from './footer';
+import ContentWrapper from './content-wrapper';
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout({
+  children,
+  className,
+  outerBackground,
+  innerBackground
+}: {
+  children: ReactNode;
+  className?: string;
+  outerBackground?: string;
+  innerBackground?: string;
+}) {
   return (
     <>
       <Head>
@@ -13,7 +24,15 @@ export default function Layout({ children }: { children: ReactNode }) {
       </Head>
       <div className="flex min-h-screen flex-col">
         <Navbar />
-        <div className="flex-1 grow">{children}</div>
+        <div className="flex-1 grow">
+          <ContentWrapper
+            className={className}
+            outerBackground={outerBackground}
+            innerBackground={innerBackground}
+          >
+            {children}
+          </ContentWrapper>
+        </div>
         <Footer />
       </div>
     </>

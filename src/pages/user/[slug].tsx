@@ -5,13 +5,13 @@ import { appRouter } from '~/server/trpc/root';
 import { db } from '~/server/db';
 import superjson from 'superjson';
 import Custom404Page from '../404';
-import ContentWrapper from '~/components/content-wrapper';
 import { LoadingPage } from '~/components/loading';
 import JournalView from '~/components/journal-view';
 import Image from 'next/image';
 import { type User } from '@clerk/nextjs/dist/types/server';
 import cn from 'classnames';
 import { useUser } from '@clerk/nextjs';
+import Layout from '~/components/layout';
 
 const UserDetails = ({ user }: { user: User }) => {
   const { user: authUser } = useUser();
@@ -42,8 +42,10 @@ const UserDetails = ({ user }: { user: User }) => {
             }}
             disabled={isCurrentUser}
             className={cn(
-              'w-full rounded-md bg-green-500 px-5 py-2 font-semibold text-gray-200',
-              isCurrentUser && 'bg-gray-300 text-gray-400'
+              'w-full rounded-md px-5 py-2 font-semibold ',
+              isCurrentUser
+                ? 'bg-gray-300 text-gray-400'
+                : 'bg-green-500 text-gray-200'
             )}
           >
             Follow
@@ -89,7 +91,7 @@ const UserPage: NextPage<{ id: string }> = ({ id }) => {
   }
 
   return (
-    <ContentWrapper>
+    <Layout>
       <section className="mb-12 border-b border-b-gray-300 pb-12">
         <h1 className="mb-4 text-2xl font-bold">
           {user.username ?? user.firstName}&apos;s Profile
@@ -97,7 +99,7 @@ const UserPage: NextPage<{ id: string }> = ({ id }) => {
         <UserDetails user={user} />
       </section>
       <JournalView user={user} />
-    </ContentWrapper>
+    </Layout>
   );
 };
 

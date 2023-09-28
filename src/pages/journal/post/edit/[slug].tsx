@@ -4,11 +4,11 @@ import { trpc } from '~/utils/trpc';
 import { appRouter } from '~/server/trpc/root';
 import { db } from '~/server/db';
 import superjson from 'superjson';
-import ContentWrapper from '~/components/content-wrapper';
 import { LoadingPage } from '~/components/loading';
 import MutatePostView from '~/components/mutate-post-view';
 import Custom404Page from '~/pages/404';
 import { useUser } from '@clerk/nextjs';
+import Layout from '~/components/layout';
 
 const EditPostPage: NextPage<{ id: string }> = ({ id }) => {
   const { user } = useUser();
@@ -28,9 +28,9 @@ const EditPostPage: NextPage<{ id: string }> = ({ id }) => {
   }
 
   return (
-    <ContentWrapper>
+    <Layout>
       <MutatePostView type="update" post={post} />
-    </ContentWrapper>
+    </Layout>
   );
 };
 

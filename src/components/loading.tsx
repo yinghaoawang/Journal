@@ -1,8 +1,18 @@
-import ContentWrapper from './content-wrapper';
+import Layout from './layout';
+import cn from 'classnames';
 
-export function LoadingSpinner({ size }: { size?: number }) {
+export function LoadingSpinner({
+  size,
+  className
+}: {
+  size?: number;
+  className?: string;
+}) {
   return (
-    <div className="flex items-center justify-center" role="status">
+    <div
+      className={cn('flex items-center justify-center', className)}
+      role="status"
+    >
       <svg
         aria-hidden="true"
         className="animate-spin fill-gray-600 text-gray-200 dark:fill-gray-300 dark:text-gray-600"
@@ -28,8 +38,8 @@ export function LoadingSpinner({ size }: { size?: number }) {
 
 export function LoadingPage() {
   return (
-    <ContentWrapper className="flex items-center justify-center">
+    <Layout className="flex items-center justify-center">
       <LoadingSpinner />
-    </ContentWrapper>
+    </Layout>
   );
 }

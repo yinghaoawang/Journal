@@ -1,10 +1,10 @@
-import ContentWrapper from '~/components/content-wrapper';
+import Layout from '~/components/layout';
 import MutatePostView from '~/components/mutate-post-view';
 
 export default function JournalPage() {
   return (
-    <ContentWrapper>
+    <Layout>
       <MutatePostView type="create" />
-    </ContentWrapper>
+    </Layout>
   );
 }
