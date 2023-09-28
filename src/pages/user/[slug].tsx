@@ -11,8 +11,11 @@ import JournalView from '~/components/journal-view';
 import Image from 'next/image';
 import { type User } from '@clerk/nextjs/dist/types/server';
 import cn from 'classnames';
+import { useUser } from '@clerk/nextjs';
 
 const UserDetails = ({ user }: { user: User }) => {
+  const { user: authUser } = useUser();
+  const isCurrentUser = authUser?.id == user.id;
   const itemClass = 'w-20 flex flex-col';
   const UserStats = () => {
     return (
@@ -29,7 +32,20 @@ const UserDetails = ({ user }: { user: User }) => {
           </div>
         </div>
         <div className="flex justify-center">
-          <button className="w-full rounded-md bg-green-500 px-5 py-2 font-semibold text-white">
+          <button
+            onClick={() => {
+              if (authUser == null) {
+                alert('You must be signed in to follow.');
+              } else {
+                alert("Not yet implemented! It's coming soon, I swear.");
+              }
+            }}
+            disabled={isCurrentUser}
+            className={cn(
+              'w-full rounded-md bg-green-500 px-5 py-2 font-semibold text-gray-200',
+              isCurrentUser && 'bg-gray-300 text-gray-400'
+            )}
+          >
             Follow
           </button>
         </div>

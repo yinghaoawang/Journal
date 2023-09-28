@@ -65,15 +65,17 @@ export default function JournalView({ user }: { user: User }) {
   return (
     <>
       <div className="flex justify-between">
-        <h2 className="text-2xl font-bold">
-          {isCurrentUser ? 'My' : user.firstName} Journal Posts
+        <h2 className="flex items-end pb-1 text-2xl font-bold">
+          {isCurrentUser ? 'My' : `${user.firstName}'s`} Journal Posts
         </h2>
-        <Link
-          className="rounded-md bg-green-500 px-5 py-3 font-semibold text-gray-200"
-          href="/journal/post/new"
-        >
-          Create New Post
-        </Link>
+        {isCurrentUser && (
+          <Link
+            className="rounded-md bg-green-500 px-5 py-3 font-semibold text-gray-200"
+            href="/journal/post/new"
+          >
+            Create New Post
+          </Link>
+        )}
       </div>
       {posts?.map((post) => (
         <div className="my-5 flex flex-col" key={post.id}>
