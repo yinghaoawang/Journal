@@ -8,6 +8,58 @@ import Custom404Page from '../404';
 import ContentWrapper from '~/components/content-wrapper';
 import { LoadingPage } from '~/components/loading';
 import JournalView from '~/components/journal-view';
+import Image from 'next/image';
+import { type User } from '@clerk/nextjs/dist/types/server';
+import cn from 'classnames';
+
+const UserDetails = ({ user }: { user: User }) => {
+  const itemClass = 'w-20 flex flex-col';
+  const UserStats = () => {
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="mr-3 mt-3 flex grow items-center justify-end gap-4 text-center font-semibold">
+          <div className={cn(itemClass)}>
+            <span>0</span>Posts
+          </div>
+          <div className={cn(itemClass)}>
+            <span>0</span>Followers
+          </div>
+          <div className={cn(itemClass)}>
+            <span>0</span>Following
+          </div>
+        </div>
+        <div className="flex justify-center">
+          <button className="w-full rounded-md bg-green-500 px-5 py-2 font-semibold text-white">
+            Follow
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="flex flex-col space-y-4">
+      <div className="flex justify-between gap-10">
+        <div>
+          <Image
+            className="rounded-full"
+            src={user.imageUrl}
+            alt="Profile Image"
+            width={120}
+            height={120}
+          />
+        </div>
+        <UserStats />
+      </div>
+      <div>
+        <p>
+          {(user.publicMetadata?.description as string | undefined) ??
+            'This user is awfully quiet.'}
+        </p>
+      </div>
+    </div>
+  );
+};
 
 const UserPage: NextPage<{ id: string }> = ({ id }) => {
   const { data: user, isLoading } = trpc.users.getById.useQuery({ userId: id });
@@ -22,9 +74,12 @@ const UserPage: NextPage<{ id: string }> = ({ id }) => {
 
   return (
     <ContentWrapper>
-      <h2 className="text-2lg font-bold">
-        {user.firstName}&apos;s Journal Entries
-      </h2>
+      <section className="mb-12 border-b border-b-gray-300 pb-12">
+        <h1 className="mb-4 text-2xl font-bold">
+          {user.username ?? user.firstName}&apos;s Profile
+        </h1>
+        <UserDetails user={user} />
+      </section>
       <JournalView user={user} />
     </ContentWrapper>
   );

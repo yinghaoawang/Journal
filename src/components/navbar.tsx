@@ -28,7 +28,6 @@ export default function Navbar() {
           <>
             <Link href={`/user/${user.id}`}>Hi {user?.firstName}!</Link>
             <Link href="/journal">My Journal</Link>
-            <Link href="/journal/post/new">New Post</Link>
             <SignOutButton />
           </>
         )}

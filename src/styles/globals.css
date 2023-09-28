@@ -21,16 +21,15 @@ body {
 
 .journal-lines {
   line-height: var(--j-line-height);
-  padding: var(--j-line-height);
   padding-block: 0;
   background: repeating-linear-gradient(
-      to bottom,
-      transparent 0 calc(var(--j-line-height) - var(--j-line-offset)),
-      var(--j-line-color) calc(var(--j-line-height) - var(--j-line-offset))
-        calc(var(--j-line-height) - var(--j-line-offset) + var(--j-line-size)),
-      transparent
-        calc(var(--j-line-height) - var(--j-line-offset) + var(--j-line-size))
-        var(--j-line-height)
-    )
-    50% 0 / calc(100% - var(--j-line-height) * 2) 100% no-repeat;
+    to bottom,
+    transparent 0 calc(var(--j-line-height) - var(--j-line-offset)),
+    var(--j-line-color) calc(var(--j-line-height) - var(--j-line-offset))
+      calc(var(--j-line-height) - var(--j-line-offset) + var(--j-line-size)),
+    transparent
+      calc(var(--j-line-height) - var(--j-line-offset) + var(--j-line-size))
+      var(--j-line-height)
+  );
+  /* 50% 0 / calc(100% - var(--j-line-height) * 2) 100% no-repeat; */
 }

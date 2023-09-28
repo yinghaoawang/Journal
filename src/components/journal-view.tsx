@@ -35,6 +35,8 @@ export default function JournalView({ user }: { user: User }) {
     return <LoadingSpinner />;
   }
 
+  const isCurrentUser = user.id === authUser?.id;
+
   const handleDeletePostClick = (id: string) => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this post?'
@@ -62,9 +64,20 @@ export default function JournalView({ user }: { user: User }) {
 
   return (
     <>
+      <div className="flex justify-between">
+        <h2 className="text-2xl font-bold">
+          {isCurrentUser ? 'My' : user.firstName} Journal Posts
+        </h2>
+        <Link
+          className="rounded-md bg-green-500 px-5 py-3 font-semibold text-gray-200"
+          href="/journal/post/new"
+        >
+          Create New Post
+        </Link>
+      </div>
       {posts?.map((post) => (
         <div className="my-5 flex flex-col" key={post.id}>
-          {user.id === authUser?.id && <UserActionLinks post={post} />}
+          {isCurrentUser && <UserActionLinks post={post} />}
           <div className="journal-lines whitespace-pre-wrap">
             <p className="font-light text-gray-600">
               {dayjs(post.createdAt).format('MMMM DD, YYYY')}

@@ -12,16 +12,16 @@ const JournalPageContent = ({ userId }: { userId: string }) => {
   if (isLoading) return <LoadingPage />;
   if (user == null) return <Custom404Page />;
 
-  return (
-    <ContentWrapper>
-      <JournalView user={user} />;
-    </ContentWrapper>
-  );
+  return <JournalView user={user} />;
 };
 
 export default function JournalPage() {
   const { user: authUser, isLoaded } = useUser();
   if (!isLoaded) return <LoadingPage />;
   if (authUser == null) return <Custom404Page />;
-  return <JournalPageContent userId={authUser.id} />;
+  return (
+    <ContentWrapper>
+      <JournalPageContent userId={authUser.id} />
+    </ContentWrapper>
+  );
 }
