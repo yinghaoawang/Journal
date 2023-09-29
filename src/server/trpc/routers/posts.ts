@@ -14,6 +14,21 @@ const ratelimit = new Ratelimit({
 });
 
 export const postsRouter = router({
+  getCountByUserId: publicProcedure
+    .input(
+      z.object({
+        userId: z.string()
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const postCount = await ctx.db.post.count({
+        where: {
+          userId: input.userId,
+          deleted: false
+        }
+      });
+      return postCount;
+    }),
   getAll: publicProcedure.query(async ({ ctx }) => {
     const posts = await ctx.db.post.findMany({
       where: {

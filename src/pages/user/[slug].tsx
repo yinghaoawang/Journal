@@ -5,7 +5,7 @@ import { appRouter } from '~/server/trpc/root';
 import { db } from '~/server/db';
 import superjson from 'superjson';
 import Custom404Page from '../404';
-import { LoadingPage } from '~/components/loading';
+import { LoadingPage, LoadingSpinner } from '~/components/loading';
 import JournalView from '~/components/journal-view';
 import Image from 'next/image';
 import { type User } from '@clerk/nextjs/dist/types/server';
@@ -15,21 +15,32 @@ import Layout from '~/components/layout';
 
 const UserDetails = ({ user }: { user: User }) => {
   const { user: authUser } = useUser();
+
+  const { data: postCount, isLoading: isPostCountLoading } =
+    trpc.posts.getCountByUserId.useQuery({
+      userId: user.id
+    });
+
   const isCurrentUser = authUser?.id == user.id;
   const itemClass = 'w-20 flex flex-col';
   const UserStats = () => {
     return (
       <div className="flex flex-col gap-3">
         <div className="mr-3 mt-3 flex grow items-center justify-center gap-4 text-center font-semibold sm:grow-0 sm:justify-end">
-          <div className={cn(itemClass)}>
-            <span>0</span>Posts
-          </div>
-          <div className={cn(itemClass)}>
-            <span>0</span>Followers
-          </div>
-          <div className={cn(itemClass)}>
-            <span>0</span>Following
-          </div>
+          {isPostCountLoading && <LoadingSpinner className="w-[200px]" />}
+          {!isPostCountLoading && (
+            <>
+              <div className={cn(itemClass)}>
+                <span>{postCount}</span>Posts
+              </div>
+              <div className={cn(itemClass)}>
+                <span>0</span>Followers
+              </div>
+              <div className={cn(itemClass)}>
+                <span>0</span>Following
+              </div>
+            </>
+          )}
         </div>
         <div className="flex justify-center">
           <button
