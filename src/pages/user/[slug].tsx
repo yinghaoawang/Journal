@@ -27,20 +27,18 @@ const UserDetails = ({ user }: { user: User }) => {
     return (
       <div className="flex flex-col gap-3">
         <div className="mr-3 mt-3 flex grow items-center justify-center gap-4 text-center font-semibold sm:grow-0 sm:justify-end">
-          {isPostCountLoading && <LoadingSpinner className="w-[200px]" />}
-          {!isPostCountLoading && (
-            <>
-              <div className={cn(itemClass)}>
-                <span>{postCount}</span>Posts
-              </div>
-              <div className={cn(itemClass)}>
-                <span>0</span>Followers
-              </div>
-              <div className={cn(itemClass)}>
-                <span>0</span>Following
-              </div>
-            </>
-          )}
+          <div className={cn(itemClass)}>
+            <span>
+              {isPostCountLoading ? <LoadingSpinner size={16} /> : postCount}
+            </span>
+            Posts
+          </div>
+          <div className={cn(itemClass)}>
+            <span>0</span>Followers
+          </div>
+          <div className={cn(itemClass)}>
+            <span>0</span>Following
+          </div>
         </div>
         <div className="flex justify-center">
           <button
