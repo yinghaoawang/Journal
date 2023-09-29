@@ -21,7 +21,7 @@ export default function JournalPage() {
   if (authUser == null) return <Custom404Page />;
   return (
     <Layout>
-      <JournalPageContent userId={authUser.id} />
+      <JournalPageContent userId={authUser.id} />;
     </Layout>
   );
 }
