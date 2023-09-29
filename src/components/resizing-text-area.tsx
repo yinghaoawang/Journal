@@ -10,8 +10,13 @@ export const resizeTextArea = (
   textArea: HTMLTextAreaElement | null | undefined
 ) => {
   if (textArea == null) return;
+  const prevScrollX = window.scrollX;
+  const prevScrollY = window.scrollY;
+
   textArea.style.height = 'auto';
   textArea.style.height = textArea.scrollHeight + 'px';
+
+  window.scrollTo(prevScrollX, prevScrollY);
 };
 
 const AutoResizingTextArea = ({
