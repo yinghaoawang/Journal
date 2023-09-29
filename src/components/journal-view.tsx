@@ -6,6 +6,7 @@ import { useUser } from '@clerk/nextjs';
 import type { Post } from '@prisma/client';
 import { LoadingSpinner } from '~/components/loading';
 import { trpc } from '~/utils/trpc';
+import cn from 'classnames';
 
 export default function JournalView({ user }: { user: User }) {
   const { user: authUser } = useUser();
@@ -62,6 +63,9 @@ export default function JournalView({ user }: { user: User }) {
     );
   };
 
+  const createLinkClass =
+    'rounded-md bg-green-500 px-5 py-3 font-semibold text-gray-200';
+
   return (
     <>
       <div className="flex justify-between">
@@ -69,12 +73,20 @@ export default function JournalView({ user }: { user: User }) {
           {isCurrentUser ? 'My' : `${user.firstName}'s`} Journal Posts
         </h2>
         {isCurrentUser && (
-          <Link
-            className="rounded-md bg-green-500 px-5 py-3 font-semibold text-gray-200"
-            href="/journal/post/new"
-          >
-            Create New Post
-          </Link>
+          <>
+            <Link
+              className={cn('hidden sm:block', createLinkClass)}
+              href="/journal/post/new"
+            >
+              Create New Post
+            </Link>
+            <Link
+              className={cn('block sm:hidden', createLinkClass)}
+              href="/journal/post/new"
+            >
+              +
+            </Link>
+          </>
         )}
       </div>
       {posts?.map((post) => (

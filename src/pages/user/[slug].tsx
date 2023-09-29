@@ -20,7 +20,7 @@ const UserDetails = ({ user }: { user: User }) => {
   const UserStats = () => {
     return (
       <div className="flex flex-col gap-3">
-        <div className="mr-3 mt-3 flex grow items-center justify-end gap-4 text-center font-semibold">
+        <div className="mr-3 mt-3 flex grow items-center justify-center gap-4 text-center font-semibold sm:grow-0 sm:justify-end">
           <div className={cn(itemClass)}>
             <span>0</span>Posts
           </div>
@@ -57,8 +57,8 @@ const UserDetails = ({ user }: { user: User }) => {
 
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex justify-between gap-10">
-        <div>
+      <div className="flex flex-col justify-between gap-0 sm:flex-row sm:gap-10">
+        <div className="flex justify-center sm:justify-start">
           <Image
             className="rounded-full"
             src={user.imageUrl}
@@ -93,7 +93,7 @@ const UserPage: NextPage<{ id: string }> = ({ id }) => {
   return (
     <Layout>
       <section className="mb-12 border-b border-b-gray-300 pb-12">
-        <h1 className="mb-4 text-2xl font-bold">
+        <h1 className="mb-4 flex justify-center text-2xl font-bold sm:justify-start">
           {user.username ?? user.firstName}&apos;s Profile
         </h1>
         <UserDetails user={user} />
