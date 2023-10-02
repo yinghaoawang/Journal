@@ -14,7 +14,7 @@ const JournalPageContent = ({ userId }: { userId: string }) => {
 
   return (
     <Layout>
-      <PostCarouselView user={user} />;
+      <PostCarouselView user={user} />
     </Layout>
   );
 };
