@@ -8,7 +8,7 @@ import { LoadingSpinner } from '~/components/loading';
 import { trpc } from '~/utils/trpc';
 import cn from 'classnames';
 
-export default function JournalView({ user }: { user: User }) {
+export default function AllPostsView({ user }: { user: User }) {
   const { user: authUser } = useUser();
   const utils = trpc.useContext();
   const { data: posts, isLoading } = trpc.posts.getByUserId.useQuery({

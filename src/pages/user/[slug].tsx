@@ -6,12 +6,13 @@ import { db } from '~/server/db';
 import superjson from 'superjson';
 import Custom404Page from '../404';
 import { LoadingPage, LoadingSpinner } from '~/components/loading';
-import JournalView from '~/components/journal-view';
+import AllPostsView from '~/components/all-posts-view';
 import Image from 'next/image';
 import { type User } from '@clerk/nextjs/dist/types/server';
 import cn from 'classnames';
 import { useUser } from '@clerk/nextjs';
 import Layout from '~/components/layout';
+import PostCarouselView from '~/components/post-carousel-view';
 
 const UserDetails = ({ user }: { user: User }) => {
   const { user: authUser } = useUser();
@@ -107,7 +108,7 @@ const UserPage: NextPage<{ id: string }> = ({ id }) => {
         </h1>
         <UserDetails user={user} />
       </section>
-      <JournalView user={user} />
+      <PostCarouselView user={user} />
     </Layout>
   );
 };
