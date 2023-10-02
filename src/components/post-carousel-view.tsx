@@ -122,27 +122,25 @@ export default function PostCarouselView({ user }: { user: User }) {
           <div className="flex gap-3">
             <button
               className={cn(
-                'text-blue-500',
-                currentPostIndex - 1 < 0 && 'text-blue-200'
+                currentPostIndex - 1 < 0 ? 'text-blue-200' : 'text-blue-500'
               )}
               disabled={currentPostIndex - 1 < 0}
               onClick={() => setCurrentPostIndex(currentPostIndex - 1)}
             >
-              Prev
+              prev
             </button>
             <button
               className={cn(
-                'text-blue-500',
-                posts != null &&
-                  currentPostIndex + 1 > posts.length - 1 &&
-                  'text-blue-200'
+                posts != null && currentPostIndex + 1 > posts.length - 1
+                  ? 'text-blue-200'
+                  : 'text-blue-500'
               )}
               disabled={
                 posts != null && currentPostIndex + 1 > posts.length - 1
               }
               onClick={() => setCurrentPostIndex(currentPostIndex + 1)}
             >
-              Next
+              next
             </button>
           </div>
           {isCurrentUser && <UserActionLinks post={currentPost} />}
