@@ -4,15 +4,14 @@ import { trpc } from '~/utils/trpc';
 import { appRouter } from '~/server/trpc/root';
 import { db } from '~/server/db';
 import superjson from 'superjson';
-import Custom404Page from '../404';
 import { LoadingPage, LoadingSpinner } from '~/components/loading';
-import AllPostsView from '~/components/all-posts-view';
 import Image from 'next/image';
 import { type User } from '@clerk/nextjs/dist/types/server';
 import cn from 'classnames';
 import { useUser } from '@clerk/nextjs';
 import Layout from '~/components/layout';
 import PostCarouselView from '~/components/post-carousel-view';
+import Custom404Page from '~/pages/404';
 
 const UserDetails = ({ user }: { user: User }) => {
   const { user: authUser } = useUser();
@@ -102,13 +101,17 @@ const UserPage: NextPage<{ id: string }> = ({ id }) => {
 
   return (
     <Layout>
-      <section className="mb-12 border-b border-b-gray-300 pb-12">
+      <section className="border-b border-b-gray-300 pb-12">
         <h1 className="mb-4 flex justify-center text-2xl font-bold sm:justify-start">
           {user.username ?? user.firstName}&apos;s Profile
         </h1>
         <UserDetails user={user} />
       </section>
-      <PostCarouselView user={user} />
+      <section className="flex gap-4 border-b border-b-gray-300 py-3">
+        <span className="text-blue-500">all posts view</span>
+        <span className="text-blue-500">single post view</span>
+      </section>
+      <PostCarouselView className="mt-12" user={user} />
     </Layout>
   );
 };

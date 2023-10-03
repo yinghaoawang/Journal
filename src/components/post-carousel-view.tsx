@@ -9,7 +9,13 @@ import { trpc } from '~/utils/trpc';
 import cn from 'classnames';
 import { useEffect, useState } from 'react';
 
-export default function PostCarouselView({ user }: { user: User }) {
+export default function PostCarouselView({
+  user,
+  className
+}: {
+  user: User;
+  className?: string;
+}) {
   const [currentPostIndex, setCurrentPostIndex] = useState(-1);
   const [currentPost, setCurrentPost] = useState<Post>();
   const { user: authUser } = useUser();
@@ -95,7 +101,7 @@ export default function PostCarouselView({ user }: { user: User }) {
 
   return (
     <>
-      <div className="flex justify-between">
+      <div className={cn('flex justify-between', className)}>
         <h2 className="flex items-end pb-1 text-2xl font-bold">
           {isCurrentUser ? 'My' : `${user.firstName}'s`} Journal Posts
         </h2>
@@ -145,7 +151,7 @@ export default function PostCarouselView({ user }: { user: User }) {
           </div>
           {isCurrentUser && <UserActionLinks post={currentPost} />}
           <div className="journal-lines whitespace-pre-wrap">
-            <p className="font-light text-gray-600">
+            <p className="font-bold">
               {dayjs(currentPost.createdAt).format('MMMM DD, YYYY')}
             </p>
             <p>Dear Journal,</p>
