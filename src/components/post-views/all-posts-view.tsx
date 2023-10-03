@@ -33,7 +33,7 @@ export default function AllPostsView({ user }: { user: User }) {
   });
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner className="content-height" />;
   }
 
   const isCurrentUser = user.id === authUser?.id;
@@ -90,10 +90,13 @@ export default function AllPostsView({ user }: { user: User }) {
         )}
       </div>
       {posts?.map((post) => (
-        <div className="my-5 flex flex-col" key={post.id}>
+        <div
+          className="mt-10 flex flex-col border-b-[3px] border-b-gray-600 pb-12"
+          key={post.id}
+        >
           {isCurrentUser && <UserActionLinks post={post} />}
           <div className="journal-lines whitespace-pre-wrap">
-            <p className="font-light text-gray-600">
+            <p className="font-bold">
               {dayjs(post.createdAt).format('MMMM DD, YYYY')}
             </p>
             <p>Dear Journal,</p>

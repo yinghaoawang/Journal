@@ -26,6 +26,6 @@ export default function UserJournalAllPage({ userId }: { userId?: string }) {
     userId = Array.isArray(slug) ? slug[0] : slug;
   }
 
-  if (userId == null) return <Custom404Page />;
+  if (userId == null) return <LoadingPage />;
   return <JournalPageContent userId={userId} />;
 }
