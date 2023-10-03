@@ -150,10 +150,8 @@ export default function PostCarouselView({
             </button>
           </div>
           {isCurrentUser && <UserActionLinks post={currentPost} />}
-          <div className="journal-lines whitespace-pre-wrap">
-            <p className="font-bold">
-              {dayjs(currentPost.createdAt).format('MMMM DD, YYYY')}
-            </p>
+          <div className="journal">
+            <h2>{dayjs(currentPost.createdAt).format('MMMM DD, YYYY')}</h2>
             <p>Dear Journal,</p>
             <p>{currentPost.content}</p>
           </div>

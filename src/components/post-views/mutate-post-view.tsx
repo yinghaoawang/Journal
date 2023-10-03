@@ -54,10 +54,10 @@ const MutatePostView = ({
         <h2 className="text-lg font-bold">
           {type === 'create' ? 'Creating' : 'Editing'} Journal Post
         </h2>
-        <div className="journal-lines my-5 whitespace-pre-wrap">
-          <p className="font-light text-gray-600">
+        <div className="journal my-5">
+          <h2>
             {dayjs(post?.createdAt ?? Date.now()).format('MMMM DD, YYYY')}
-          </p>
+          </h2>
           <p>Dear Journal,</p>
           <AutoResizingTextArea
             className="journal-lines w-full resize-none !p-0"
