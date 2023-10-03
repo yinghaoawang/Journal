@@ -9,8 +9,8 @@ import { LoadingPage } from '~/components/loading';
 import { trpc } from '~/utils/trpc';
 
 export default function PublicUsersPage({}) {
-  const { data: users, status } = trpc.users.getAll.useQuery();
-  if (status !== 'success') return <LoadingPage />;
+  const { data: users, isLoading } = trpc.users.getAll.useQuery();
+  if (isLoading) return <LoadingPage />;
   console.log(users);
   return (
     <Layout>
