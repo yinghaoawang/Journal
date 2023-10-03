@@ -5,17 +5,12 @@ import { createServerSideHelpers } from '@trpc/react-query/server';
 import { appRouter } from '~/server/trpc/root';
 import superjson from 'superjson';
 import { db } from '~/server/db';
-import { LoadingPage } from '~/components/loading';
-import { trpc } from '~/utils/trpc';
+import { type User } from '@clerk/nextjs/dist/types/server';
 
-export default function PublicUsersPage({}) {
-  const { data: users, isLoading } = trpc.users.getAll.useQuery();
-  if (isLoading) return <LoadingPage />;
-  console.log(users);
+export default function PublicUsersPage({ users }: { users: User[] }) {
   return (
     <Layout>
       <Custom404Contents />
-      users go here
       {users?.map((user) => (
         <Link key={user.id} href={`/user/${user.id}`}></Link>
       ))}
@@ -23,18 +18,18 @@ export default function PublicUsersPage({}) {
   );
 }
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: { db, userId: null },
     transformer: superjson
   });
 
-  await helpers.users.getAll.prefetch();
+  const users = await helpers.users.getAll.fetch();
 
   return {
     props: {
-      trpcState: JSON.stringify(helpers.dehydrate())
+      users: JSON.parse(JSON.stringify(users)) as User[]
     }
   };
 };
