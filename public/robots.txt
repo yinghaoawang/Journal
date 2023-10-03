@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://journal-nine-rust.vercel.app/sitemap.xml
