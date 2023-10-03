@@ -12,6 +12,7 @@ import { useUser } from '@clerk/nextjs';
 import Layout from '~/components/layout';
 import PostCarouselView from '~/components/post-carousel-view';
 import Custom404Page from '~/pages/404';
+import Link from 'next/link';
 
 const UserDetails = ({ user }: { user: User }) => {
   const { user: authUser } = useUser();
@@ -108,8 +109,12 @@ const UserPage = ({ id }: { id: string }) => {
         <UserDetails user={user} />
       </section>
       <section className="flex gap-4 border-b border-b-gray-300 py-3">
-        <span className="text-blue-500">all posts view</span>
-        <span className="text-blue-500">single post view</span>
+        <Link href={`/user/${user.id}/journal/all`} className="text-blue-500">
+          all posts view
+        </Link>
+        <Link href={`/user/${user.id}/journal/`} className="text-blue-500">
+          single post view
+        </Link>
       </section>
       <PostCarouselView className="mt-12" user={user} />
     </Layout>
