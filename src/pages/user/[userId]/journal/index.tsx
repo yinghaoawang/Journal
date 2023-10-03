@@ -1,4 +1,3 @@
-import { useUser } from '@clerk/nextjs';
 import { LoadingPage } from '~/components/loading';
 import { trpc } from '~/utils/trpc';
 import Layout from '~/components/layouts/layout';
@@ -10,6 +9,7 @@ const JournalPageContent = ({ userId }: { userId: string }) => {
   const { data: user, isLoading } = trpc.users.getById.useQuery({
     userId
   });
+
   if (isLoading) return <LoadingPage />;
   if (user == null) return <Custom404Page />;
 
@@ -27,6 +27,6 @@ export default function UserJournalSinglePage({ userId }: { userId?: string }) {
     userId = Array.isArray(paramsUserId) ? paramsUserId[0] : paramsUserId;
   }
 
-  if (userId == null) return <Custom404Page />;
+  if (userId == null) return <LoadingPage />;
   return <JournalPageContent userId={userId} />;
 }

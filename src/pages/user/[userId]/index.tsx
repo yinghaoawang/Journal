@@ -92,13 +92,10 @@ const UserDetails = ({ user }: { user: User }) => {
 const UserPage = ({ userId }: { userId: string }) => {
   const { data: user, isLoading } = trpc.users.getById.useQuery({ userId });
 
-  if (user == null) {
-    if (isLoading) {
-      return <LoadingPage />;
-    } else {
-      return <Custom404Page />;
-    }
-  }
+  if (userId == null) return <LoadingPage />;
+
+  if (isLoading) return <LoadingPage />;
+  if (user == null) return <Custom404Page />;
 
   return (
     <Layout>
