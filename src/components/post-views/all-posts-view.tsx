@@ -89,9 +89,12 @@ export default function AllPostsView({ user }: { user: User }) {
           </>
         )}
       </div>
-      {posts?.map((post) => (
+      {posts?.map((post, index) => (
         <div
-          className="mt-10 flex flex-col border-b-[3px] border-b-gray-600 pb-12"
+          className={cn(
+            'mt-10 flex flex-col pb-12',
+            index < posts.length - 1 && 'border-b-[3px] border-b-gray-600'
+          )}
           key={post.id}
         >
           {isCurrentUser && <UserActionLinks post={post} />}
