@@ -1,4 +1,4 @@
-import type { GetStaticProps, NextPage } from 'next';
+import type { GetStaticProps } from 'next';
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import { trpc } from '~/utils/trpc';
 import { appRouter } from '~/server/trpc/root';
@@ -88,7 +88,7 @@ const UserDetails = ({ user }: { user: User }) => {
   );
 };
 
-const UserPage: NextPage<{ id: string }> = ({ id }) => {
+const UserPage = ({ id }: { id: string }) => {
   const { data: user, isLoading } = trpc.users.getById.useQuery({ userId: id });
 
   if (user == null) {
