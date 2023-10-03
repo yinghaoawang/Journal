@@ -1,7 +1,7 @@
 import { useUser } from '@clerk/nextjs';
 import { LoadingPage } from '~/components/loading';
 import Custom404Page from '~/pages/404';
-import UserJournalSinglePage from '../user/[slug]/journal';
+import UserJournalSinglePage from '../user/[userId]/journal';
 
 export default function CurrUserJournalSinglePage() {
   const { user: authUser, isLoaded } = useUser();

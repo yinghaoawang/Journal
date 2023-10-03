@@ -22,8 +22,8 @@ const JournalPageContent = ({ userId }: { userId: string }) => {
 export default function UserJournalAllPage({ userId }: { userId?: string }) {
   const router = useRouter();
   if (userId == null) {
-    const { slug } = router.query;
-    userId = Array.isArray(slug) ? slug[0] : slug;
+    const { userId: paramsUserId } = router.query;
+    userId = Array.isArray(paramsUserId) ? paramsUserId[0] : paramsUserId;
   }
 
   if (userId == null) return <LoadingPage />;

@@ -1,7 +1,7 @@
 import { LoadingSpinner } from '~/components/loading';
 import { useUser } from '@clerk/nextjs';
 import { SignInButton } from '@clerk/nextjs';
-import UserPage from './user/[slug]';
+import UserPage from './user/[userId]';
 
 export const LandingPage = () => {
   return (
@@ -33,5 +33,5 @@ export default function HomePage() {
     return <LandingPage />;
   }
 
-  return <UserPage id={user.id} />;
+  return <UserPage userId={user.id} />;
 }

@@ -89,8 +89,8 @@ const UserDetails = ({ user }: { user: User }) => {
   );
 };
 
-const UserPage = ({ id }: { id: string }) => {
-  const { data: user, isLoading } = trpc.users.getById.useQuery({ userId: id });
+const UserPage = ({ userId }: { userId: string }) => {
+  const { data: user, isLoading } = trpc.users.getById.useQuery({ userId });
 
   if (user == null) {
     if (isLoading) {
@@ -128,15 +128,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
     transformer: superjson
   });
 
-  const slug = context.params?.slug;
-  if (typeof slug !== 'string') throw new Error('No slug');
+  const userId = context.params?.userId;
+  if (typeof userId !== 'string') throw new Error('No userId in search params');
 
-  await helpers.users.getById.prefetch({ userId: slug });
+  await helpers.users.getById.prefetch({ userId });
 
   return {
     props: {
       trpcState: JSON.stringify(helpers.dehydrate()),
-      id: slug
+      userId
     }
   };
 };

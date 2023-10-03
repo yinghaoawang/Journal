@@ -10,9 +10,9 @@ import Custom404Page from '~/pages/404';
 import { useUser } from '@clerk/nextjs';
 import Layout from '~/components/layouts/layout';
 
-const EditPostPage: NextPage<{ id: string }> = ({ id }) => {
+const EditPostPage = ({ postId }: { postId: string }) => {
   const { user } = useUser();
-  const { data: post, isLoading } = trpc.posts.getById.useQuery({ id });
+  const { data: post, isLoading } = trpc.posts.getById.useQuery({ id: postId });
 
   if (post == null) {
     if (isLoading) {
@@ -41,15 +41,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
     transformer: superjson
   });
 
-  const slug = context.params?.slug;
-  if (typeof slug !== 'string') throw new Error('No slug');
+  const postId = context.params?.postId;
+  if (typeof postId !== 'string') throw new Error('No postId in search params');
 
-  await helpers.posts.getById.prefetch({ id: slug });
+  await helpers.posts.getById.prefetch({ id: postId });
 
   return {
     props: {
       trpcState: JSON.stringify(helpers.dehydrate()),
-      id: slug
+      postId: postId
     }
   };
 };
