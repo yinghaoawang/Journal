@@ -9,10 +9,10 @@ import Image from 'next/image';
 import { type User } from '@clerk/nextjs/dist/types/server';
 import cn from 'classnames';
 import { useUser } from '@clerk/nextjs';
-import Layout from '~/components/layout';
-import PostCarouselView from '~/components/post-carousel-view';
+import Layout from '~/components/layouts/layout';
 import Custom404Page from '~/pages/404';
 import Link from 'next/link';
+import PostCarouselView from '~/components/post-views/post-carousel-view';
 
 const UserDetails = ({ user }: { user: User }) => {
   const { user: authUser } = useUser();

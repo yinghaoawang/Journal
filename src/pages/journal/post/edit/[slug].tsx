@@ -5,10 +5,10 @@ import { appRouter } from '~/server/trpc/root';
 import { db } from '~/server/db';
 import superjson from 'superjson';
 import { LoadingPage } from '~/components/loading';
-import MutatePostView from '~/components/mutate-post-view';
+import MutatePostView from '~/components/post-views/mutate-post-view';
 import Custom404Page from '~/pages/404';
 import { useUser } from '@clerk/nextjs';
-import Layout from '~/components/layout';
+import Layout from '~/components/layouts/layout';
 
 const EditPostPage: NextPage<{ id: string }> = ({ id }) => {
   const { user } = useUser();

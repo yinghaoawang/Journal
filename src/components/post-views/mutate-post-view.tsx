@@ -5,7 +5,7 @@ import dayjs from '~/utils/dayjs';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { trpc } from '~/utils/trpc';
-import { LoadingSpinner } from './loading';
+import { LoadingSpinner } from '../loading';
 
 const MutatePostView = ({
   type,

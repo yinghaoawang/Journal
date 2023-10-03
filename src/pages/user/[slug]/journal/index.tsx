@@ -1,10 +1,10 @@
 import { useUser } from '@clerk/nextjs';
 import { LoadingPage } from '~/components/loading';
 import { trpc } from '~/utils/trpc';
-import Layout from '~/components/layout';
-import PostCarouselView from '~/components/post-carousel-view';
+import Layout from '~/components/layouts/layout';
 import Custom404Page from '~/pages/404';
 import { useRouter } from 'next/router';
+import PostCarouselView from '~/components/post-views/post-carousel-view';
 
 const JournalPageContent = ({ userId }: { userId: string }) => {
   const { data: user, isLoading } = trpc.users.getById.useQuery({

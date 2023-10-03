@@ -1,7 +1,7 @@
 import { LoadingPage } from '~/components/loading';
 import { trpc } from '~/utils/trpc';
-import Layout from '~/components/layout';
-import AllPostsView from '~/components/all-posts-view';
+import Layout from '~/components/layouts/layout';
+import AllPostsView from '~/components/post-views/all-posts-view';
 import Custom404Page from '~/pages/404';
 import { useRouter } from 'next/router';
 

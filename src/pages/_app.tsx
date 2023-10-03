@@ -4,7 +4,7 @@ import { trpc } from '~/utils/trpc';
 
 import '~/styles/globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
-import Layout from '~/components/layout';
+import Layout from '~/components/layouts/layout';
 import { Toaster } from 'react-hot-toast';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
