@@ -4,17 +4,18 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useUser } from '@clerk/nextjs';
 import type { Post } from '@prisma/client';
-import { LoadingSpinner } from '~/components/loading';
 import { trpc } from '~/utils/trpc';
 import cn from 'classnames';
 
-export default function AllPostsView({ user }: { user: User }) {
+export default function AllPostsView({
+  user,
+  posts
+}: {
+  user: User;
+  posts: Post[];
+}) {
   const { user: authUser } = useUser();
   const utils = trpc.useContext();
-  const { data: posts, isLoading } = trpc.posts.getByUserId.useQuery({
-    userId: user.id,
-    orderBy: 'desc'
-  });
 
   const { mutate: deletePost } = trpc.posts.delete.useMutation({
     onSuccess: () => {
@@ -31,10 +32,6 @@ export default function AllPostsView({ user }: { user: User }) {
       }
     }
   });
-
-  if (isLoading) {
-    return <LoadingSpinner className="content-height" />;
-  }
 
   const isCurrentUser = user.id === authUser?.id;
 
@@ -89,7 +86,7 @@ export default function AllPostsView({ user }: { user: User }) {
           </>
         )}
       </div>
-      {posts?.map((post, index) => (
+      {posts.map((post, index) => (
         <div
           className={cn(
             'mt-10 flex flex-col pb-12',
