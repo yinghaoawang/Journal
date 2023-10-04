@@ -4,7 +4,7 @@ import { trpc } from '~/utils/trpc';
 import { appRouter } from '~/server/trpc/root';
 import { db } from '~/server/db';
 import superjson from 'superjson';
-import { LoadingPage, LoadingSpinner } from '~/components/loading';
+import { LoadingSpinner } from '~/components/loading';
 import Image from 'next/image';
 import { type User } from '@clerk/nextjs/dist/types/server';
 import cn from 'classnames';
@@ -89,12 +89,7 @@ const UserDetails = ({ user }: { user: User }) => {
   );
 };
 
-const UserPage = ({ userId }: { userId: string }) => {
-  const { data: user, isLoading } = trpc.users.getById.useQuery({ userId });
-
-  if (userId == null) return <LoadingPage />;
-
-  if (isLoading) return <LoadingPage />;
+const UserPage = ({ user }: { user: User }) => {
   if (user == null) return <Custom404Page />;
 
   return (
@@ -128,12 +123,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const userId = context.params?.userId;
   if (typeof userId !== 'string') throw new Error('No userId in search params');
 
-  await helpers.users.getById.prefetch({ userId });
+  const user = await helpers.users.getById.fetch({ userId });
 
   return {
     props: {
-      trpcState: JSON.stringify(helpers.dehydrate()),
-      userId
+      user: JSON.parse(JSON.stringify(user)) as User
     }
   };
 };
