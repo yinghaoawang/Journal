@@ -34,7 +34,6 @@ const AutoResizingTextArea = ({
 
   const updateDimensions = () => {
     resizeTextArea(textAreaRef?.current);
-    console.log('resizing');
   };
 
   useEffect(() => {
