@@ -66,7 +66,7 @@ export default function PostCarouselView({
   });
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner className="mt-10" />;
   }
 
   const isCurrentUser = user.id === authUser?.id;
