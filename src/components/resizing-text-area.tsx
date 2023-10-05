@@ -31,9 +31,20 @@ const AutoResizingTextArea = ({
   className?: string;
 }) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  useEffect(() => {
+
+  const updateDimensions = () => {
     resizeTextArea(textAreaRef?.current);
+    console.log('resizing');
+  };
+
+  useEffect(() => {
+    updateDimensions();
   }, [textAreaRef]);
+
+  useEffect(() => {
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
 
   return (
     <textarea
