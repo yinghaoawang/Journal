@@ -34,7 +34,6 @@ export default function PostCarouselView({
 
   useEffect(() => {
     if (posts == null) {
-      console.error('Posts not fetched');
       return;
     }
     if (currentPostIndex < 0) {
