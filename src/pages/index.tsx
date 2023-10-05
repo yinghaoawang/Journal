@@ -1,7 +1,8 @@
-import { LoadingSpinner } from '~/components/loading';
-import { useUser } from '@clerk/nextjs';
+import { clerkClient } from '@clerk/nextjs';
 import { SignInButton } from '@clerk/nextjs';
 import UserPage from './user/[userId]';
+import { type User, getAuth } from '@clerk/nextjs/server';
+import { type NextRequest } from 'next/server';
 
 export const LandingPage = () => {
   return (
@@ -22,16 +23,21 @@ export const LandingPage = () => {
   );
 };
 
-export default function HomePage() {
-  const { user, isLoaded } = useUser();
-
-  if (!isLoaded) {
-    return <LoadingSpinner className="h-screen" />;
-  }
-
-  if (user == null) {
+export default function HomePage({ authUser }: { authUser: User }) {
+  if (authUser == null) {
     return <LandingPage />;
   }
 
-  return <UserPage userId={user.id} />;
+  return <UserPage user={authUser} />;
 }
+
+export const getServerSideProps = async ({ req }: { req: NextRequest }) => {
+  const { userId } = getAuth(req);
+  const user = userId ? await clerkClient.users.getUser(userId) : null;
+
+  return {
+    props: {
+      authUser: JSON.parse(JSON.stringify(user)) as User
+    }
+  };
+};
