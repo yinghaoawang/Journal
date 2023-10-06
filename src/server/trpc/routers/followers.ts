@@ -4,26 +4,36 @@ import { z } from 'zod';
 import { router, privateProcedure } from '~/server/trpc/trpc';
 
 export const followsRouter = router({
-  getFollowerCount: privateProcedure.query(async ({ ctx }) => {
-    const userId = ctx.userId;
-    const follows = await ctx.db.follow.count({
-      where: {
-        followerId: userId
-      }
-    });
+  getFollowerCount: privateProcedure
+    .input(
+      z.object({
+        userId: z.string()
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const follows = await ctx.db.follow.count({
+        where: {
+          followingId: input.userId
+        }
+      });
 
-    return follows;
-  }),
-  getFollowingCount: privateProcedure.query(async ({ ctx }) => {
-    const userId = ctx.userId;
-    const follows = await ctx.db.follow.count({
-      where: {
-        followingId: userId
-      }
-    });
+      return follows;
+    }),
+  getFollowingCount: privateProcedure
+    .input(
+      z.object({
+        userId: z.string()
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const follows = await ctx.db.follow.count({
+        where: {
+          followerId: input.userId
+        }
+      });
 
-    return follows;
-  }),
+      return follows;
+    }),
   isFollowingById: privateProcedure
     .input(
       z.object({

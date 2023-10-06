@@ -92,9 +92,9 @@ const UserDetails = ({ user }: { user: User }) => {
       userId: user.id
     });
   const { data: followerCount, isLoading: isFollowerCountLoading } =
-    trpc.follows.getFollowerCount.useQuery();
+    trpc.follows.getFollowerCount.useQuery({ userId: user.id });
   const { data: followingCount, isLoading: isFollowingCountLoading } =
-    trpc.follows.getFollowingCount.useQuery();
+    trpc.follows.getFollowingCount.useQuery({ userId: user.id });
 
   const itemClass = 'w-20 flex flex-col';
   const UserStats = () => {
