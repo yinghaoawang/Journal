@@ -106,15 +106,15 @@ export const postsRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.userId;
-      const matchingPost = await ctx.db.post.findFirst({
+      const existingPost = await ctx.db.post.findFirst({
         where: {
           id: input.id
         }
       });
 
-      if (matchingPost == null) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (existingPost == null) throw new TRPCError({ code: 'NOT_FOUND' });
 
-      if (matchingPost.userId != userId)
+      if (existingPost.userId != userId)
         throw new TRPCError({ code: 'UNAUTHORIZED' });
 
       const post = await ctx.db.post.update({
@@ -136,15 +136,15 @@ export const postsRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.userId;
-      const matchingPost = await ctx.db.post.findFirst({
+      const existingPost = await ctx.db.post.findFirst({
         where: {
           id: input.id
         }
       });
 
-      if (matchingPost == null) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (existingPost == null) throw new TRPCError({ code: 'NOT_FOUND' });
 
-      if (matchingPost.userId != userId)
+      if (existingPost.userId != userId)
         throw new TRPCError({ code: 'UNAUTHORIZED' });
 
       const post = await ctx.db.post.update({

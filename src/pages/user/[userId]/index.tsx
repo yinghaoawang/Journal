@@ -13,16 +13,89 @@ import Layout from '~/components/layouts/layout';
 import Custom404Page from '~/pages/404';
 import Link from 'next/link';
 import PostCarouselView from '~/components/post-views/post-carousel-view';
+import toast from 'react-hot-toast';
+
+const FollowUserButton = ({ user }: { user: User }) => {
+  const { user: authUser } = useUser();
+  const isCurrentUser = authUser?.id == user.id;
+  const utils = trpc.useContext();
+  const { mutate: followUser, isLoading: isFollowLoading } =
+    trpc.follows.followUser.useMutation({
+      onSuccess: () => {
+        toast.success(`You followed ${user.firstName}`);
+        void utils.follows.invalidate();
+      },
+      onError: (error) => {
+        if (error?.message) {
+          toast.error(error.message);
+        } else {
+          toast.error(`Failed to follow ${user.firstName}!`);
+        }
+      }
+    });
+
+  const { mutate: unfollowUser, isLoading: isUnfollowLoading } =
+    trpc.follows.unfollowUser.useMutation({
+      onSuccess: () => {
+        toast.success(`You unfollowed ${user.firstName}`);
+        void utils.follows.invalidate();
+      },
+      onError: (error) => {
+        if (error?.message) {
+          toast.error(error.message);
+        } else {
+          toast.error(`Failed to unfollow ${user.firstName}!`);
+        }
+      }
+    });
+
+  const { data: isFollowing, isLoading: followCheckLoading } =
+    trpc.follows.isFollowingById.useQuery({
+      followingUserId: user.id
+    });
+
+  const isLoading = followCheckLoading || isFollowLoading || isUnfollowLoading;
+
+  let colorClass = 'bg-green-500 text-gray-200';
+  if (isFollowing) colorClass = 'bg-red-600 text-gray-100';
+  else if (isCurrentUser) colorClass = 'bg-gray-300 text-gray-400';
+
+  return (
+    <button
+      onClick={() => {
+        if (authUser == null) {
+          alert('You must be signed in to follow.');
+        } else {
+          if (isFollowing) {
+            unfollowUser({ followingUserId: user.id });
+          } else {
+            followUser({ followingUserId: user.id });
+          }
+        }
+      }}
+      disabled={isCurrentUser || isLoading}
+      className={cn(
+        'flex h-10 w-full items-center justify-center rounded-md px-5 py-2 font-semibold',
+        colorClass
+      )}
+    >
+      {isLoading && <LoadingSpinner size={15} />}
+      {!isLoading && !isFollowing && 'Follow'}
+      {!isLoading && isFollowing && 'Unfollow'}
+    </button>
+  );
+};
 
 const UserDetails = ({ user }: { user: User }) => {
-  const { user: authUser } = useUser();
-
   const { data: postCount, isLoading: isPostCountLoading } =
     trpc.posts.getCountByUserId.useQuery({
       userId: user.id
     });
+  const { data: followerCount, isLoading: isFollowerCountLoading } =
+    trpc.follows.getFollowerCount.useQuery();
+  const { data: followingCount, isLoading: isFollowingCountLoading } =
+    trpc.follows.getFollowingCount.useQuery();
 
-  const isCurrentUser = authUser?.id == user.id;
   const itemClass = 'w-20 flex flex-col';
   const UserStats = () => {
     return (
@@ -35,31 +108,28 @@ const UserDetails = ({ user }: { user: User }) => {
             Posts
           </div>
           <div className={cn(itemClass)}>
-            <span>0</span>Followers
+            <span>
+              {isFollowerCountLoading ? (
+                <LoadingSpinner size={16} />
+              ) : (
+                followerCount
+              )}
+            </span>
+            Followers
           </div>
           <div className={cn(itemClass)}>
-            <span>0</span>Following
+            <span>
+              {isFollowingCountLoading ? (
+                <LoadingSpinner size={16} />
+              ) : (
+                followingCount
+              )}
+            </span>
+            Following
           </div>
         </div>
         <div className="flex justify-center">
-          <button
-            onClick={() => {
-              if (authUser == null) {
-                alert('You must be signed in to follow.');
-              } else {
-                alert("Not yet implemented! It's coming soon, I swear.");
-              }
-            }}
-            disabled={isCurrentUser}
-            className={cn(
-              'w-full rounded-md px-5 py-2 font-semibold ',
-              isCurrentUser
-                ? 'bg-gray-300 text-gray-400'
-                : 'bg-green-500 text-gray-200'
-            )}
-          >
-            Follow
-          </button>
+          <FollowUserButton user={user} />
         </div>
       </div>
     );
