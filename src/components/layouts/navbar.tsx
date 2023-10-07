@@ -27,7 +27,7 @@ export default function Navbar() {
         {isSignedIn && (
           <>
             <Link href={`/user/${user.id}`}>Hi {user?.firstName}!</Link>
-            <Link href="/journal">My Journal</Link>
+            <Link href="/feed">My Feed</Link>
             <SignOutButton />
           </>
         )}

@@ -4,6 +4,36 @@ import { z } from 'zod';
 import { router, privateProcedure } from '~/server/trpc/trpc';
 
 export const followsRouter = router({
+  getFollowingIds: privateProcedure
+    .input(
+      z.object({
+        userId: z.string()
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const follows = await ctx.db.follow.findMany({
+        where: {
+          followerId: input.userId
+        }
+      });
+
+      return follows.map((data) => data.followingId);
+    }),
+  getFollowerIds: privateProcedure
+    .input(
+      z.object({
+        userId: z.string()
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const follows = await ctx.db.follow.findMany({
+        where: {
+          followingId: input.userId
+        }
+      });
+
+      return follows.map((data) => data.followerId);
+    }),
   getFollowerCount: privateProcedure
     .input(
       z.object({
@@ -11,13 +41,13 @@ export const followsRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const follows = await ctx.db.follow.count({
+      const count = await ctx.db.follow.count({
         where: {
           followingId: input.userId
         }
       });
 
-      return follows;
+      return count;
     }),
   getFollowingCount: privateProcedure
     .input(
@@ -26,13 +56,13 @@ export const followsRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const follows = await ctx.db.follow.count({
+      const count = await ctx.db.follow.count({
         where: {
           followerId: input.userId
         }
       });
 
-      return follows;
+      return count;
     }),
   isFollowingById: privateProcedure
     .input(
@@ -41,10 +71,10 @@ export const followsRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const userId = ctx.userId;
+      const authUserId = ctx.userId;
       const follower = await ctx.db.follow.findFirst({
         where: {
-          followerId: userId,
+          followerId: authUserId,
           followingId: input.followingUserId
         }
       });
@@ -58,11 +88,11 @@ export const followsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.userId;
+      const authUserId = ctx.userId;
 
       const existingFollow = await ctx.db.follow.findFirst({
         where: {
-          followerId: userId,
+          followerId: authUserId,
           followingId: input.followingUserId
         }
       });
@@ -75,7 +105,7 @@ export const followsRouter = router({
 
       const follow = await ctx.db.follow.create({
         data: {
-          followerId: userId,
+          followerId: authUserId,
           followingId: input.followingUserId
         }
       });
@@ -89,11 +119,11 @@ export const followsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.userId;
+      const authUserId = ctx.userId;
 
       const existingFollow = await ctx.db.follow.findFirst({
         where: {
-          followerId: userId,
+          followerId: authUserId,
           followingId: input.followingUserId
         }
       });

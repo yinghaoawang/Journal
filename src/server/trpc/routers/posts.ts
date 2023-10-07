@@ -84,14 +84,14 @@ export const postsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.userId;
+      const authUserId = ctx.userId;
 
-      const { success } = await ratelimit.limit(userId);
+      const { success } = await ratelimit.limit(authUserId);
       if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' });
 
       const post = await ctx.db.post.create({
         data: {
-          userId,
+          userId: authUserId,
           content: input.content
         }
       });
@@ -105,7 +105,7 @@ export const postsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.userId;
+      const authUserId = ctx.userId;
       const existingPost = await ctx.db.post.findFirst({
         where: {
           id: input.id
@@ -114,7 +114,7 @@ export const postsRouter = router({
 
       if (existingPost == null) throw new TRPCError({ code: 'NOT_FOUND' });
 
-      if (existingPost.userId != userId)
+      if (existingPost.userId != authUserId)
         throw new TRPCError({ code: 'UNAUTHORIZED' });
 
       const post = await ctx.db.post.update({
@@ -135,7 +135,7 @@ export const postsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.userId;
+      const authUserId = ctx.userId;
       const existingPost = await ctx.db.post.findFirst({
         where: {
           id: input.id
@@ -144,7 +144,7 @@ export const postsRouter = router({
 
       if (existingPost == null) throw new TRPCError({ code: 'NOT_FOUND' });
 
-      if (existingPost.userId != userId)
+      if (existingPost.userId != authUserId)
         throw new TRPCError({ code: 'UNAUTHORIZED' });
 
       const post = await ctx.db.post.update({
