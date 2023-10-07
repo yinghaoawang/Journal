@@ -1,10 +1,12 @@
 import { clerkClient } from '@clerk/nextjs';
 import { type User, getAuth } from '@clerk/nextjs/server';
+import dayjs from '~/utils/dayjs';
+import Image from 'next/image';
 import { type NextRequest } from 'next/server';
 import Layout from '~/components/layouts/layout';
 import { LoadingSpinner } from '~/components/loading';
 import { trpc } from '~/utils/trpc';
-import Custom404Page from '../404';
+import Link from 'next/link';
 
 export default function DashboardPage({ authUser }: { authUser: User }) {
   const FeedContent = () => {
@@ -17,13 +19,35 @@ export default function DashboardPage({ authUser }: { authUser: User }) {
 
     if (feedContent == null) throw new Error('Feed is null');
     return (
-      <div>
+      <div className="flex flex-col gap-8">
         {feedContent.map(({ user, post }) => (
-          <div key={post.id}>
-            <div>
-              {user?.firstName} {user.lastName}
+          <div key={post.id} className="rounded-lg border border-gray-300 p-4">
+            <div className="mb-2 flex flex-col">
+              <div className="mb-1 flex items-center gap-3">
+                <Link href={`/user/${user.id}`}>
+                  <Image
+                    className="rounded-full"
+                    alt={`${user.firstName}'s pfp`}
+                    height={40}
+                    width={40}
+                    src={user.imageUrl}
+                  />
+                </Link>
+                <Link href={`/user/${user.id}`}>
+                  {user?.firstName} {user.lastName}
+                </Link>
+              </div>
+              <span className="text-sm text-gray-500">
+                Posted {dayjs(post.createdAt).fromNow()}
+              </span>
             </div>
-            <div>{post.content}</div>
+            <div className="h-[400px] overflow-auto">
+              <div className="journal">
+                <h2>{dayjs(post.createdAt).format('MMMM DD, YYYY')}</h2>
+                <p>Dear Journal,</p>
+                <p>{post.content}</p>
+              </div>
+            </div>
           </div>
         ))}
       </div>
@@ -31,8 +55,8 @@ export default function DashboardPage({ authUser }: { authUser: User }) {
   };
 
   return (
-    <Layout>
-      <h2 className="text-2xl font-bold">Your Feed</h2>
+    <Layout className="pb-10">
+      <h2 className="mb-6 text-2xl font-bold">Your Feed</h2>
       <FeedContent />
     </Layout>
   );

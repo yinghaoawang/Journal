@@ -23,8 +23,8 @@ export const feedRouter = router({
 
     for (const followingId of followingIds) {
       const latestPost = await ctx.db.post.findFirst({
-        where: { userId: followingId },
-        orderBy: { createdAt: 'desc' }
+        where: { userId: followingId, deleted: false },
+        orderBy: { updatedAt: 'desc' }
       });
 
       if (latestPost) {
@@ -36,7 +36,7 @@ export const feedRouter = router({
     }
 
     return feedContent.sort(
-      (a, b) => b.post.createdAt.getTime() - a.post.createdAt.getTime()
+      (a, b) => b.post.updatedAt.getTime() - a.post.updatedAt.getTime()
     );
   })
 });
