@@ -1,14 +1,11 @@
-import { clerkClient } from '@clerk/nextjs';
-import { type User, getAuth } from '@clerk/nextjs/server';
 import dayjs from '~/utils/dayjs';
 import Image from 'next/image';
-import { type NextRequest } from 'next/server';
 import Layout from '~/components/layouts/layout';
 import { LoadingSpinner } from '~/components/loading';
 import { trpc } from '~/utils/trpc';
 import Link from 'next/link';
 
-export default function DashboardPage({ authUser }: { authUser: User }) {
+export default function DashboardPage() {
   const FeedContent = () => {
     const { data: feedContent, isLoading: isFeedLoading } =
       trpc.feed.getFeed.useQuery();
@@ -65,14 +62,3 @@ export default function DashboardPage({ authUser }: { authUser: User }) {
     </Layout>
   );
 }
-
-export const getServerSideProps = async ({ req }: { req: NextRequest }) => {
-  const { userId } = getAuth(req);
-  const user = userId ? await clerkClient.users.getUser(userId) : null;
-
-  return {
-    props: {
-      authUser: JSON.parse(JSON.stringify(user)) as User
-    }
-  };
-};
