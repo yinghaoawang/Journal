@@ -38,7 +38,11 @@ export default function DashboardPage({ authUser }: { authUser: User }) {
                 </Link>
               </div>
               <span className="text-sm text-gray-500">
-                Posted {dayjs(post.createdAt).fromNow()}
+                {post.createdAt.getTime() === post.updatedAt.getTime() ? (
+                  <span>Posted {dayjs(post.createdAt).fromNow()}</span>
+                ) : (
+                  <span>Updated {dayjs(post.updatedAt).fromNow()}</span>
+                )}
               </span>
             </div>
             <div className="h-[400px] overflow-auto">
