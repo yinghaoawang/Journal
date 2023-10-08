@@ -61,7 +61,7 @@ export default function AllPostsView({
   };
 
   const createLinkClass =
-    'rounded-md bg-green-500 px-5 py-3 font-semibold text-gray-200';
+    'rounded-md bg-green-500 px-5 py-3 font-semibold text-gray-100';
 
   return (
     <>

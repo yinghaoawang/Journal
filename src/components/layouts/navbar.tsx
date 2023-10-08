@@ -17,7 +17,7 @@ export default function Navbar() {
           href="/"
         >
           <Image src="/journal.svg" width={25} height={60} alt="Logo" />
-          <span className="pt-2 text-2xl font-semibold text-black">
+          <span className="hidden pt-2 text-2xl font-semibold lg:inline-block">
             Journal
           </span>
         </Link>
@@ -26,8 +26,14 @@ export default function Navbar() {
         {!isSignedIn && <SignInButton />}
         {isSignedIn && (
           <>
-            <Link href={`/user/${user.id}`}>Hi {user?.firstName}!</Link>
-            <Link href="/feed">My Feed</Link>
+            <Link href={`/user/${user.id}`}>
+              <span className="hidden lg:inline-block">Hi&nbsp;</span>
+              {user?.firstName}
+              <span className="hidden lg:inline-block">!</span>
+            </Link>
+            <Link href="/feed">
+              <span className="hidden lg:inline-block">My&nbsp;</span>Feed
+            </Link>
             <SignOutButton />
           </>
         )}
