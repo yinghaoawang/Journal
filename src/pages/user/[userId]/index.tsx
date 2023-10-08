@@ -14,10 +14,10 @@ import Custom404Page from '~/pages/404';
 import Link from 'next/link';
 import PostCarouselView from '~/components/post-views/post-carousel-view';
 import toast from 'react-hot-toast';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { type ChangeEvent, useEffect, useState } from 'react';
 
 const FollowUserButton = ({ user }: { user: User }) => {
-  const { user: authUser } = useUser();
+  const { user: authUser, isLoaded: isAuthUserLoaded } = useUser();
   const isCurrentUser = authUser?.id == user.id;
   const utils = trpc.useContext();
   const { mutate: followUser, isLoading: isFollowLoading } =
@@ -55,11 +55,16 @@ const FollowUserButton = ({ user }: { user: User }) => {
       followingUserId: user.id
     });
 
-  const isLoading = followCheckLoading || isFollowLoading || isUnfollowLoading;
+  const isLoading =
+    followCheckLoading ||
+    isFollowLoading ||
+    isUnfollowLoading ||
+    !isAuthUserLoaded;
 
-  let colorClass = 'bg-green-500 text-gray-200';
-  if (isFollowing) colorClass = 'bg-red-600 text-gray-100';
-  else if (isCurrentUser) colorClass = 'bg-gray-300 text-gray-400';
+  let followBtnColor = 'bg-green-500 text-gray-200';
+  if (isLoading) followBtnColor = 'bg-gray-300 text-gray-400';
+  else if (isCurrentUser) followBtnColor = 'bg-gray-300 text-gray-400';
+  else if (isFollowing) followBtnColor = 'bg-red-600 text-gray-100';
 
   return (
     <button
@@ -77,7 +82,7 @@ const FollowUserButton = ({ user }: { user: User }) => {
       disabled={isCurrentUser || isLoading}
       className={cn(
         'flex h-10 w-full items-center justify-center rounded-md px-5 py-2 font-semibold',
-        colorClass
+        followBtnColor
       )}
     >
       {isLoading && <LoadingSpinner size={15} />}
