@@ -1,4 +1,3 @@
-import type { GetStaticProps } from 'next';
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import { trpc } from '~/utils/trpc';
 import { appRouter } from '~/server/trpc/root';
@@ -15,6 +14,7 @@ import Link from 'next/link';
 import PostCarouselView from '~/components/post-views/post-carousel-view';
 import toast from 'react-hot-toast';
 import { type ChangeEvent, useEffect, useState } from 'react';
+import { type GetServerSideProps } from 'next';
 
 const FollowUserButton = ({ user }: { user: User }) => {
   const { user: authUser, isLoaded: isAuthUserLoaded } = useUser();
@@ -243,7 +243,7 @@ const UserPage = ({ user }: { user: User }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: { db, userId: null },
@@ -259,13 +259,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
     props: {
       user: JSON.parse(JSON.stringify(user)) as User
     }
-  };
-};
-
-export const getStaticPaths = () => {
-  return {
-    paths: [],
-    fallback: 'blocking'
   };
 };
 

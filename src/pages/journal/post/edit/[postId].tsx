@@ -1,4 +1,4 @@
-import type { GetStaticProps } from 'next';
+import type { GetServerSideProps } from 'next';
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import { trpc } from '~/utils/trpc';
 import { appRouter } from '~/server/trpc/root';
@@ -34,7 +34,7 @@ const EditPostPage = ({ postId }: { postId: string }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: { db, userId: null },
@@ -51,13 +51,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
       trpcState: JSON.stringify(helpers.dehydrate()),
       postId: postId
     }
-  };
-};
-
-export const getStaticPaths = () => {
-  return {
-    paths: [],
-    fallback: 'blocking'
   };
 };
 

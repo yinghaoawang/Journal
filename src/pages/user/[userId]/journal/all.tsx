@@ -7,7 +7,7 @@ import { createServerSideHelpers } from '@trpc/react-query/server';
 import { appRouter } from '~/server/trpc/root';
 import { db } from '~/server/db';
 import superjson from 'superjson';
-import { type GetStaticProps } from 'next';
+import { type GetServerSideProps } from 'next';
 import { type User } from '@clerk/nextjs/dist/types/server';
 import { type Post } from '@prisma/client';
 
@@ -46,7 +46,7 @@ export default function UserJournalAllPage({
   );
 }
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: { db, userId: null },
@@ -67,12 +67,5 @@ export const getStaticProps: GetStaticProps = async (context) => {
       user: JSON.parse(JSON.stringify(user)) as User,
       posts: JSON.parse(JSON.stringify(posts)) as Post[]
     }
-  };
-};
-
-export const getStaticPaths = () => {
-  return {
-    paths: [],
-    fallback: 'blocking'
   };
 };
