@@ -54,3 +54,11 @@ body {
 .form-item > label {
   @apply font-bold;
 }
+
+.button { 
+  @apply rounded-md bg-green-500 px-5 py-2 font-semibold text-gray-100;
+}
+
+.button:disabled {
+  @apply bg-gray-300 text-gray-400;
+}

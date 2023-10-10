@@ -19,5 +19,26 @@ export const profileRouter = router({
           description: input.description
         }
       });
+    }),
+  updateSettings: privateProcedure
+    .input(
+      z.object({
+        displayName: z
+          .string()
+          .min(0)
+          .max(16, 'Display name must be less than 16 characters.'),
+        isPublic: z.boolean()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const authUserId = ctx.userId;
+      const user = await clerkClient.users.getUser(authUserId);
+      if (user == null) throw new Error('User does not exist in Clerk');
+      return await clerkClient.users.updateUserMetadata(authUserId, {
+        publicMetadata: {
+          displayName: input.displayName,
+          isPublic: input.isPublic
+        }
+      });
     })
 });

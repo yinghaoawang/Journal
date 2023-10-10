@@ -6,18 +6,42 @@ import Custom404Page from '../404';
 import cn from 'classnames';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import { trpc } from '~/utils/trpc';
+import toast from 'react-hot-toast';
+import { TRPCClientError } from '@trpc/client';
 
 const SettingsForm = ({ user }: { user: User }) => {
+  const { emailAddresses, firstName, lastName, createdAt, publicMetadata } =
+    user;
+
   const [displayName, setDisplayName] = useState('');
   const [isPublic, setIsPublic] = useState(false);
   useEffect(() => {
     setDisplayName((publicMetadata.displayName as string) ?? '');
-    setIsPublic((publicMetadata.isPubluc as boolean) ?? false);
+    setIsPublic((publicMetadata.isPublic as boolean) ?? false);
   }, [user]);
 
+  const { mutate: updateSettings, isLoading: isUpdatingSettings } =
+    trpc.profile.updateSettings.useMutation({
+      onSuccess: () => {
+        toast.success(`Settings updated successfully!`);
+      },
+      onError: (error) => {
+        if (error?.data?.zodError) {
+          const errors = error.data?.zodError?.fieldErrors;
+          const errorMessage = errors?.[Object.keys(errors)?.[0] ?? '']?.[0];
+          if (errorMessage) {
+            toast.error(errorMessage);
+          } else {
+            toast.error('Failed to update settings.');
+          }
+        } else {
+          toast.error('Failed to update settings.');
+        }
+      }
+    });
+
   if (user == null) return;
-  const { emailAddresses, firstName, lastName, createdAt, publicMetadata } =
-    user;
 
   const formItemClass = 'form-item flex justify-between';
   return (
@@ -59,7 +83,13 @@ const SettingsForm = ({ user }: { user: User }) => {
         />
       </div>
       <div className="flex justify-end">
-        <button className="rounded-md bg-green-500 px-5 py-2 font-semibold text-gray-100">
+        <button
+          onClick={() => {
+            updateSettings({ displayName, isPublic });
+          }}
+          className="button"
+          disabled={isUpdatingSettings}
+        >
           Apply Changes
         </button>
       </div>

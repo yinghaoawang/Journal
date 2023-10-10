@@ -61,11 +61,6 @@ const FollowUserButton = ({ user }: { user: User }) => {
     isUnfollowLoading ||
     !isAuthUserLoaded;
 
-  let followBtnColor = 'bg-green-500 text-gray-200';
-  if (isLoading) followBtnColor = 'bg-gray-300 text-gray-400';
-  else if (isCurrentUser) followBtnColor = 'bg-gray-300 text-gray-400';
-  else if (isFollowing) followBtnColor = 'bg-red-600 text-gray-100';
-
   return (
     <button
       onClick={() => {
@@ -81,8 +76,8 @@ const FollowUserButton = ({ user }: { user: User }) => {
       }}
       disabled={isCurrentUser || isLoading}
       className={cn(
-        'flex h-10 w-full items-center justify-center rounded-md px-5 py-2 font-semibold',
-        followBtnColor
+        'button flex h-10 w-full items-center justify-center rounded-md px-5 py-2 font-semibold',
+        isFollowing && '!bg-red-600 !text-gray-100'
       )}
     >
       {isLoading && <LoadingSpinner size={15} />}

@@ -60,9 +60,6 @@ export default function AllPostsView({
     );
   };
 
-  const createLinkClass =
-    'rounded-md bg-green-500 px-5 py-3 font-semibold text-gray-100';
-
   return (
     <>
       <div className="flex justify-between">
@@ -71,16 +68,10 @@ export default function AllPostsView({
         </h2>
         {isCurrentUser && (
           <>
-            <Link
-              className={cn('hidden sm:block', createLinkClass)}
-              href="/journal/post/new"
-            >
+            <Link className="button hidden sm:block" href="/journal/post/new">
               Create New Post
             </Link>
-            <Link
-              className={cn('block sm:hidden', createLinkClass)}
-              href="/journal/post/new"
-            >
+            <Link className=" button block sm:hidden" href="/journal/post/new">
               +
             </Link>
           </>

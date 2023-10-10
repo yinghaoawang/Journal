@@ -95,9 +95,6 @@ export default function PostCarouselView({
     );
   };
 
-  const createLinkClass =
-    'rounded-md bg-green-500 px-5 py-3 font-semibold text-gray-100';
-
   return (
     <>
       <div className={cn('flex justify-between', className)}>
@@ -107,13 +104,13 @@ export default function PostCarouselView({
         {isCurrentUser && (
           <>
             <Link
-              className={cn('hidden sm:block', createLinkClass)}
+              className="button hidden !py-4 sm:block"
               href="/journal/post/new"
             >
               Create New Post
             </Link>
             <Link
-              className={cn('block sm:hidden', createLinkClass)}
+              className="button block !py-4 sm:hidden"
               href="/journal/post/new"
             >
               +

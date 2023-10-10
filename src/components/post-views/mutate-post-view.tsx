@@ -36,7 +36,9 @@ const MutatePostView = ({
     trpc.posts.create.useMutation({
       onSuccess: onMutateSuccess,
       onError: (error) => {
-        onMutateError(error.data?.zodError?.fieldErrors.content?.[0]);
+        const errors = error.data?.zodError?.fieldErrors;
+        const errorMessage = errors?.[Object.keys(errors)?.[0] ?? '']?.[0];
+        onMutateError(errorMessage);
       }
     });
 
@@ -44,7 +46,9 @@ const MutatePostView = ({
     trpc.posts.update.useMutation({
       onSuccess: onMutateSuccess,
       onError: (error) => {
-        onMutateError(error.data?.zodError?.fieldErrors.content?.[0]);
+        const errors = error.data?.zodError?.fieldErrors;
+        const errorMessage = errors?.[Object.keys(errors)?.[0] ?? '']?.[0];
+        onMutateError(errorMessage);
       }
     });
   const isLoading = isCreating || isUpdating;

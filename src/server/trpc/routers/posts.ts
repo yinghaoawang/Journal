@@ -80,7 +80,10 @@ export const postsRouter = router({
   create: privateProcedure
     .input(
       z.object({
-        content: z.string().min(1).max(5000)
+        content: z
+          .string()
+          .min(1)
+          .max(5000, 'Posts can only have a maximum of 5000 characters.')
       })
     )
     .mutation(async ({ ctx, input }) => {
