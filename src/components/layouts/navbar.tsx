@@ -34,6 +34,7 @@ export default function Navbar() {
             <Link href="/feed">
               <span className="hidden lg:inline-block">My&nbsp;</span>Feed
             </Link>
+            <Link href="/settings">Settings</Link>
             <SignOutButton />
           </>
         )}
