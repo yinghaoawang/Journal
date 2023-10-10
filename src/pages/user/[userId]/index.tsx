@@ -23,14 +23,22 @@ const FollowUserButton = ({ user }: { user: User }) => {
   const { mutate: followUser, isLoading: isFollowLoading } =
     trpc.follows.followUser.useMutation({
       onSuccess: () => {
-        toast.success(`You followed ${user.firstName}`);
+        toast.success(
+          `You followed ${
+            (user?.publicMetadata?.displayName as string) ?? user.firstName
+          }`
+        );
         void utils.follows.invalidate();
       },
       onError: (error) => {
         if (error?.message) {
           toast.error(error.message);
         } else {
-          toast.error(`Failed to follow ${user.firstName}!`);
+          toast.error(
+            `Failed to follow ${
+              (user?.publicMetadata?.displayName as string) ?? user.firstName
+            }!`
+          );
         }
       }
     });
@@ -38,14 +46,22 @@ const FollowUserButton = ({ user }: { user: User }) => {
   const { mutate: unfollowUser, isLoading: isUnfollowLoading } =
     trpc.follows.unfollowUser.useMutation({
       onSuccess: () => {
-        toast.success(`You unfollowed ${user.firstName}`);
+        toast.success(
+          `You unfollowed ${
+            (user?.publicMetadata?.displayName as string) ?? user.firstName
+          }`
+        );
         void utils.follows.invalidate();
       },
       onError: (error) => {
         if (error?.message) {
           toast.error(error.message);
         } else {
-          toast.error(`Failed to unfollow ${user.firstName}!`);
+          toast.error(
+            `Failed to unfollow ${
+              (user?.publicMetadata?.displayName as string) ?? user.firstName
+            }!`
+          );
         }
       }
     });
@@ -221,7 +237,8 @@ const UserPage = ({ user }: { user: User }) => {
     <Layout>
       <section className="border-b border-b-gray-300 pb-12">
         <h1 className="mb-4 flex justify-center text-2xl font-bold sm:justify-start">
-          {user.username ?? user.firstName}&apos;s Profile
+          {(user?.publicMetadata?.displayName as string) ?? user.firstName}
+          &apos;s Profile
         </h1>
         <UserDetails user={user} />
       </section>

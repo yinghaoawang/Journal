@@ -28,7 +28,9 @@ export default function Navbar() {
           <>
             <Link href={`/user/${user.id}`}>
               <span className="hidden lg:inline-block">Hi&nbsp;</span>
-              {user?.firstName}
+              {(user?.publicMetadata?.displayName as string) ??
+                user?.firstName ??
+                'User'}
               <span className="hidden lg:inline-block">!</span>
             </Link>
             <Link href="/feed">

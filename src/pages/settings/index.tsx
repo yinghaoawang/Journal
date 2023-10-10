@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { trpc } from '~/utils/trpc';
 import toast from 'react-hot-toast';
-import { TRPCClientError } from '@trpc/client';
 
 const SettingsForm = ({ user }: { user: User }) => {
   const { emailAddresses, firstName, lastName, createdAt, publicMetadata } =

@@ -99,7 +99,12 @@ export default function PostCarouselView({
     <>
       <div className={cn('flex justify-between', className)}>
         <h2 className="flex items-end pb-1 text-2xl font-bold">
-          {isCurrentUser ? 'My' : `${user.firstName}'s`} Journal Posts
+          {isCurrentUser
+            ? 'My'
+            : `${
+                (user?.publicMetadata?.displayName as string) ?? user.firstName
+              }'s`}{' '}
+          Journal Posts
         </h2>
         {isCurrentUser && (
           <>
