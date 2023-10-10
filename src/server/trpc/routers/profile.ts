@@ -36,7 +36,7 @@ export const profileRouter = router({
       if (user == null) throw new Error('User does not exist in Clerk');
       return await clerkClient.users.updateUserMetadata(authUserId, {
         publicMetadata: {
-          displayName: input.displayName,
+          displayName: input.displayName.length > 0 ? input.displayName : null,
           isPublic: input.isPublic
         }
       });
