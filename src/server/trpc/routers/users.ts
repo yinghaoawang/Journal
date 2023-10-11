@@ -32,12 +32,15 @@ export const filterUserForClient = (user: User): FilteredUser => {
 export const usersRouter = router({
   getAll: publicProcedure.query(async () => {
     const users = await clerkClient.users.getUserList();
-    return users.map(filterUserForClient);
+    return users
+      .filter((user) => user?.publicMetadata?.isPublic)
+      .map(filterUserForClient);
   }),
   getById: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ input }) => {
       const user = await clerkClient.users.getUser(input.userId);
+      if (!user?.publicMetadata?.isPublic) return null;
       return filterUserForClient(user);
     })
 });
