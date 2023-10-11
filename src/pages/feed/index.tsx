@@ -44,7 +44,7 @@ export default function DashboardPage() {
                 )}
               </span>
             </div>
-            <div className="h-[400px] overflow-auto">
+            <div className="max-h-[400px] overflow-auto">
               <div className="journal">
                 <h2>{dayjs(post.createdAt).format('MMMM DD, YYYY')}</h2>
                 <p>Dear Journal,</p>
