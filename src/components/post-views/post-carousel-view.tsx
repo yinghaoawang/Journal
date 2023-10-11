@@ -1,4 +1,3 @@
-import type { User } from '@clerk/nextjs/dist/types/server';
 import dayjs from '~/utils/dayjs';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -8,12 +7,13 @@ import { LoadingSpinner } from '~/components/loading';
 import { trpc } from '~/utils/trpc';
 import cn from 'classnames';
 import { useEffect, useState } from 'react';
+import { type FilteredUser } from '~/server/trpc/routers/users';
 
 export default function PostCarouselView({
   user,
   className
 }: {
-  user: User;
+  user: FilteredUser;
   className?: string;
 }) {
   const [currentPostIndex, setCurrentPostIndex] = useState(-1);
@@ -99,11 +99,7 @@ export default function PostCarouselView({
     <>
       <div className={cn('flex justify-between', className)}>
         <h2 className="flex items-end pb-1 text-2xl font-bold">
-          {isCurrentUser
-            ? 'My'
-            : `${
-                (user?.publicMetadata?.displayName as string) ?? user.firstName
-              }'s`}{' '}
+          {isCurrentUser ? 'My' : `${user?.displayName ?? user.firstName}'s`}{' '}
           Journal Posts
         </h2>
         {isCurrentUser && (

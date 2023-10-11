@@ -1,10 +1,10 @@
 import { type Post } from '@prisma/client';
 import { privateProcedure, router } from '../trpc';
 import { clerkClient } from '@clerk/nextjs';
-import { type User } from '@clerk/nextjs/dist/types/server';
+import { type FilteredUser, filterUserForClient } from './users';
 
 export type FeedContent = {
-  user: User;
+  user: FilteredUser;
   post: Post;
 };
 
@@ -29,7 +29,9 @@ export const feedRouter = router({
 
       if (latestPost) {
         feedContent.push({
-          user: await clerkClient.users.getUser(followingId),
+          user: filterUserForClient(
+            await clerkClient.users.getUser(followingId)
+          ),
           post: latestPost
         });
       }

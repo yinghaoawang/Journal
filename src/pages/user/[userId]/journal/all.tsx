@@ -8,8 +8,8 @@ import { appRouter } from '~/server/trpc/root';
 import { db } from '~/server/db';
 import superjson from 'superjson';
 import { type GetServerSideProps } from 'next';
-import { type User } from '@clerk/nextjs/dist/types/server';
 import { type Post } from '@prisma/client';
+import { type FilteredUser } from '~/server/trpc/routers/users';
 
 export const JournalPageContent = ({ userId }: { userId: string }) => {
   const { data: user, isLoading: isUserLoading } = trpc.users.getById.useQuery({
@@ -36,7 +36,7 @@ export default function UserJournalAllPage({
   user,
   posts
 }: {
-  user: User;
+  user: FilteredUser;
   posts: Post[];
 }) {
   return (
@@ -64,7 +64,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
-      user: JSON.parse(JSON.stringify(user)) as User,
+      user: JSON.parse(JSON.stringify(user)) as FilteredUser,
       posts: JSON.parse(JSON.stringify(posts)) as Post[]
     }
   };

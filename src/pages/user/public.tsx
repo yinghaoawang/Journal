@@ -5,9 +5,9 @@ import { createServerSideHelpers } from '@trpc/react-query/server';
 import { appRouter } from '~/server/trpc/root';
 import superjson from 'superjson';
 import { db } from '~/server/db';
-import { type User } from '@clerk/nextjs/dist/types/server';
+import { type FilteredUser } from '~/server/trpc/routers/users';
 
-export default function PublicUsersPage({ users }: { users: User[] }) {
+export default function PublicUsersPage({ users }: { users: FilteredUser[] }) {
   return (
     <Layout>
       <Custom404Contents />
@@ -29,7 +29,7 @@ export const getServerSideProps = async () => {
 
   return {
     props: {
-      users: JSON.parse(JSON.stringify(users)) as User[]
+      users: JSON.parse(JSON.stringify(users)) as FilteredUser[]
     }
   };
 };

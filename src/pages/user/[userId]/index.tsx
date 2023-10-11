@@ -5,7 +5,6 @@ import { db } from '~/server/db';
 import superjson from 'superjson';
 import { LoadingSpinner } from '~/components/loading';
 import Image from 'next/image';
-import { type User } from '@clerk/nextjs/dist/types/server';
 import cn from 'classnames';
 import { useUser } from '@clerk/nextjs';
 import Layout from '~/components/layouts/layout';
@@ -15,19 +14,16 @@ import PostCarouselView from '~/components/post-views/post-carousel-view';
 import toast from 'react-hot-toast';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { type GetServerSideProps } from 'next';
+import { type FilteredUser } from '~/server/trpc/routers/users';
 
-const FollowUserButton = ({ user }: { user: User }) => {
+const FollowUserButton = ({ user }: { user: FilteredUser }) => {
   const { user: authUser, isLoaded: isAuthUserLoaded } = useUser();
   const isCurrentUser = authUser?.id == user.id;
   const utils = trpc.useContext();
   const { mutate: followUser, isLoading: isFollowLoading } =
     trpc.follows.followUser.useMutation({
       onSuccess: () => {
-        toast.success(
-          `You followed ${
-            (user?.publicMetadata?.displayName as string) ?? user.firstName
-          }`
-        );
+        toast.success(`You followed ${user?.displayName ?? user.firstName}`);
         void utils.follows.invalidate();
       },
       onError: (error) => {
@@ -35,9 +31,7 @@ const FollowUserButton = ({ user }: { user: User }) => {
           toast.error(error.message);
         } else {
           toast.error(
-            `Failed to follow ${
-              (user?.publicMetadata?.displayName as string) ?? user.firstName
-            }!`
+            `Failed to follow ${user?.displayName ?? user.firstName}!`
           );
         }
       }
@@ -46,11 +40,7 @@ const FollowUserButton = ({ user }: { user: User }) => {
   const { mutate: unfollowUser, isLoading: isUnfollowLoading } =
     trpc.follows.unfollowUser.useMutation({
       onSuccess: () => {
-        toast.success(
-          `You unfollowed ${
-            (user?.publicMetadata?.displayName as string) ?? user.firstName
-          }`
-        );
+        toast.success(`You unfollowed ${user?.displayName ?? user.firstName}`);
         void utils.follows.invalidate();
       },
       onError: (error) => {
@@ -58,9 +48,7 @@ const FollowUserButton = ({ user }: { user: User }) => {
           toast.error(error.message);
         } else {
           toast.error(
-            `Failed to unfollow ${
-              (user?.publicMetadata?.displayName as string) ?? user.firstName
-            }!`
+            `Failed to unfollow ${user?.displayName ?? user.firstName}!`
           );
         }
       }
@@ -103,7 +91,7 @@ const FollowUserButton = ({ user }: { user: User }) => {
   );
 };
 
-const UserFollowStats = ({ user }: { user: User }) => {
+const UserFollowStats = ({ user }: { user: FilteredUser }) => {
   const { data: postCount, isLoading: isPostCountLoading } =
     trpc.posts.getCountByUserId.useQuery({
       userId: user.id
@@ -151,15 +139,12 @@ const UserFollowStats = ({ user }: { user: User }) => {
   );
 };
 
-const UserDescription = ({ user }: { user: User }) => {
+const UserDescription = ({ user }: { user: FilteredUser }) => {
   const { user: authUser } = useUser();
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState<string>('');
   useEffect(() => {
-    setDescription(
-      (user.publicMetadata?.description as string) ??
-        'This user is awfully quiet.'
-    );
+    setDescription(user?.description ?? 'This user is awfully quiet.');
   }, [user]);
   const { mutate: updateDescription, isLoading: isUpdating } =
     trpc.profile.updateDescription.useMutation({
@@ -208,7 +193,7 @@ const UserDescription = ({ user }: { user: User }) => {
   );
 };
 
-const UserDetails = ({ user }: { user: User }) => {
+const UserDetails = ({ user }: { user: FilteredUser }) => {
   return (
     <div className="flex flex-col space-y-4">
       <div className="flex flex-col justify-between gap-0 sm:flex-row sm:gap-10">
@@ -230,14 +215,14 @@ const UserDetails = ({ user }: { user: User }) => {
   );
 };
 
-const UserPage = ({ user }: { user: User }) => {
+const UserPage = ({ user }: { user: FilteredUser }) => {
   if (user == null) return <Custom404Page />;
 
   return (
     <Layout>
       <section className="border-b border-b-gray-300 pb-12">
         <h1 className="mb-4 flex justify-center text-2xl font-bold sm:justify-start">
-          {(user?.publicMetadata?.displayName as string) ?? user.firstName}
+          {user?.displayName ?? user.firstName}
           &apos;s Profile
         </h1>
         <UserDetails user={user} />
@@ -269,7 +254,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
-      user: JSON.parse(JSON.stringify(user)) as User
+      user: JSON.parse(JSON.stringify(user)) as FilteredUser
     }
   };
 };

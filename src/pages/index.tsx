@@ -5,7 +5,8 @@ import { createServerSideHelpers } from '@trpc/react-query/server';
 import { appRouter } from '~/server/trpc/root';
 import superjson from 'superjson';
 import { db } from '~/server/db';
-import { NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
+import { type FilteredUser } from '~/server/trpc/routers/users';
 
 export const LandingPage = () => {
   return (
@@ -26,7 +27,7 @@ export const LandingPage = () => {
   );
 };
 
-export default function HomePage({ authUser }: { authUser: User }) {
+export default function HomePage({ authUser }: { authUser: FilteredUser }) {
   if (authUser == null) {
     return <LandingPage />;
   }

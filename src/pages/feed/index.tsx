@@ -24,18 +24,15 @@ export default function DashboardPage() {
                 <Link href={`/user/${user.id}`}>
                   <Image
                     className="rounded-full"
-                    alt={`${
-                      (user?.publicMetadata?.displayName as string) ??
-                      user.firstName
-                    }'s pfp`}
+                    alt={`${user?.displayName ?? user.firstName}'s pfp`}
                     height={40}
                     width={40}
                     src={user.imageUrl}
                   />
                 </Link>
                 <Link href={`/user/${user.id}`}>
-                  {(user?.publicMetadata?.displayName as string)
-                    ? (user.publicMetadata.displayName as string)
+                  {user?.displayName
+                    ? user.displayName
                     : `${user?.firstName} ${user?.lastName ?? ''}`}
                 </Link>
               </div>

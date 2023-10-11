@@ -5,6 +5,7 @@ import { Redis } from '@upstash/redis'; // see below for cloudflare and fastly a
 
 import { router, publicProcedure, privateProcedure } from '~/server/trpc/trpc';
 import { TRPCError } from '@trpc/server';
+import { filterUserForClient } from './users';
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -35,12 +36,14 @@ export const postsRouter = router({
         deleted: false
       }
     });
-    const users = await clerkClient.users.getUserList({
-      userId: posts.map((post) => post.userId)
-    });
+    const filteredUsers = (
+      await clerkClient.users.getUserList({
+        userId: posts.map((post) => post.userId)
+      })
+    ).map(filterUserForClient);
     return posts.map((post) => ({
       ...post,
-      user: users.find((u) => u.id === post.userId)
+      user: filteredUsers.find((u) => u.id === post.userId)
     }));
   }),
   getById: publicProcedure

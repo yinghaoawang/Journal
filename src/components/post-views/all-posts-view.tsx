@@ -1,4 +1,3 @@
-import type { User } from '@clerk/nextjs/dist/types/server';
 import dayjs from '~/utils/dayjs';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -6,12 +5,13 @@ import { useUser } from '@clerk/nextjs';
 import type { Post } from '@prisma/client';
 import { trpc } from '~/utils/trpc';
 import cn from 'classnames';
+import { type FilteredUser } from '~/server/trpc/routers/users';
 
 export default function AllPostsView({
   user,
   posts
 }: {
-  user: User;
+  user: FilteredUser;
   posts: Post[];
 }) {
   const { user: authUser } = useUser();
@@ -64,11 +64,7 @@ export default function AllPostsView({
     <>
       <div className="flex justify-between">
         <h2 className="flex items-end pb-1 text-2xl font-bold">
-          {isCurrentUser
-            ? 'My'
-            : `${
-                (user?.publicMetadata?.displayName as string) ?? user.firstName
-              }'s`}{' '}
+          {isCurrentUser ? 'My' : `${user?.displayName ?? user.firstName}'s`}{' '}
           Journal Posts
         </h2>
         {isCurrentUser && (
