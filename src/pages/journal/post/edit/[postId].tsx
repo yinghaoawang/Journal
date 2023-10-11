@@ -1,29 +1,16 @@
 import type { GetServerSideProps } from 'next';
 import { createServerSideHelpers } from '@trpc/react-query/server';
-import { trpc } from '~/utils/trpc';
 import { appRouter } from '~/server/trpc/root';
 import { db } from '~/server/db';
 import superjson from 'superjson';
-import { LoadingPage } from '~/components/loading';
 import MutatePostView from '~/components/post-views/mutate-post-view';
 import Custom404Page from '~/pages/404';
-import { useUser } from '@clerk/nextjs';
 import Layout from '~/components/layouts/layout';
+import { type Post } from '@prisma/client';
+import { getAuth } from '@clerk/nextjs/server';
 
-const EditPostPage = ({ postId }: { postId: string }) => {
-  const { user } = useUser();
-  const { data: post, isLoading } = trpc.posts.getById.useQuery({ id: postId });
-
+const EditPostPage = ({ post }: { post: Post }) => {
   if (post == null) {
-    if (isLoading) {
-      return <LoadingPage />;
-    } else {
-      return <Custom404Page />;
-    }
-  }
-
-  if (post.userId != user?.id) {
-    console.error('Unauthorized');
     return <Custom404Page />;
   }
 
@@ -34,22 +21,35 @@ const EditPostPage = ({ postId }: { postId: string }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  params
+}) => {
+  const { userId } = getAuth(req);
+  if (userId == null)
+    return {
+      props: {
+        post: null
+      }
+    };
+
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: { db, userId: null },
     transformer: superjson
   });
 
-  const postId = context.params?.postId;
+  const postId = params?.postId;
   if (typeof postId !== 'string') throw new Error('No postId in search params');
 
-  await helpers.posts.getById.prefetch({ id: postId });
+  const post = await helpers.posts.getById.fetch({ id: postId });
 
   return {
     props: {
-      trpcState: JSON.stringify(helpers.dehydrate()),
-      postId: postId
+      post:
+        userId == post?.userId
+          ? (JSON.parse(JSON.stringify(post)) as Post)
+          : null
     }
   };
 };
