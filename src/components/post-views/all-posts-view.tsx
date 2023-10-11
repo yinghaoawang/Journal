@@ -6,6 +6,7 @@ import type { Post } from '@prisma/client';
 import { trpc } from '~/utils/trpc';
 import cn from 'classnames';
 import { type FilteredUser } from '~/server/trpc/routers/users';
+import { UserIsPrivateText } from '../utils';
 
 export default function AllPostsView({
   user,
@@ -83,7 +84,7 @@ export default function AllPostsView({
           </>
         )}
       </div>
-      {isProfileHidden && <div>This user has a private profile.</div>}
+      {isProfileHidden && <UserIsPrivateText className="mt-4" />}
       {posts.map((post, index) => (
         <div
           className={cn(

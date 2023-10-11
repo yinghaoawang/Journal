@@ -88,10 +88,7 @@ export const postsRouter = router({
         ? await clerkClient.users.getUser(authUserId)
         : null;
       const user = await clerkClient.users.getUser(input.userId);
-      if (!(await isUserTrustAuth(authUser, user, ctx.db))) {
-        console.error('user is not trusted');
-        return null;
-      }
+      if (!(await isUserTrustAuth(authUser, user, ctx.db))) return null;
 
       const posts = await ctx.db.post.findMany({
         where: {

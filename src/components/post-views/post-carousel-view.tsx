@@ -8,6 +8,48 @@ import { trpc } from '~/utils/trpc';
 import cn from 'classnames';
 import { useEffect, useState } from 'react';
 import { type FilteredUser } from '~/server/trpc/routers/users';
+import { UserIsPrivateText } from '../utils';
+
+const UserActionLinks = ({ post }: { post: Post }) => {
+  const utils = trpc.useContext();
+  const { mutate: deletePost } = trpc.posts.delete.useMutation({
+    onSuccess: () => {
+      toast.success('Post deleted successfully!');
+      void utils.posts.invalidate();
+    },
+    onError: (error) => {
+      console.log(error);
+      const errorMessage = error?.message;
+      if (errorMessage) {
+        toast.error(errorMessage);
+      } else {
+        toast.error('Failed to delete post!');
+      }
+    }
+  });
+
+  const handleDeletePostClick = (id: string) => {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this post?'
+    );
+    if (confirmed) {
+      deletePost({ id });
+    }
+  };
+  return (
+    <div className="mr-5 flex justify-end gap-2">
+      <Link className="text-blue-500" href={`/journal/post/edit/${post.id}`}>
+        edit
+      </Link>
+      <button
+        onClick={() => handleDeletePostClick(post.id)}
+        className="text-blue-500"
+      >
+        delete
+      </button>
+    </div>
+  );
+};
 
 export default function PostCarouselView({
   user,
@@ -19,7 +61,6 @@ export default function PostCarouselView({
   const [currentPostIndex, setCurrentPostIndex] = useState(-1);
   const [currentPost, setCurrentPost] = useState<Post>();
   const { user: authUser } = useUser();
-  const utils = trpc.useContext();
   const { data: posts, isLoading } = trpc.posts.getByUserId.useQuery(
     {
       userId: user.id,
@@ -48,52 +89,18 @@ export default function PostCarouselView({
     setCurrentPost(posts[currentPostIndex]);
   }, [currentPostIndex, posts]);
 
-  const { mutate: deletePost } = trpc.posts.delete.useMutation({
-    onSuccess: () => {
-      toast.success('Post deleted successfully!');
-      void utils.posts.invalidate();
-    },
-    onError: (error) => {
-      console.log(error);
-      const errorMessage = error?.message;
-      if (errorMessage) {
-        toast.error(errorMessage);
-      } else {
-        toast.error('Failed to delete post!');
-      }
-    }
+  const { data: isProfileHidden } = trpc.profile.isUserHiddenToAuth.useQuery({
+    userId: user.id
   });
+  const isCurrentUser = user.id === authUser?.id;
+
+  if (isProfileHidden) {
+    return <UserIsPrivateText className="mt-4" />;
+  }
 
   if (isLoading) {
     return <LoadingSpinner className="mt-10" />;
   }
-
-  const isCurrentUser = user.id === authUser?.id;
-
-  const handleDeletePostClick = (id: string) => {
-    const confirmed = window.confirm(
-      'Are you sure you want to delete this post?'
-    );
-    if (confirmed) {
-      deletePost({ id });
-    }
-  };
-
-  const UserActionLinks = ({ post }: { post: Post }) => {
-    return (
-      <div className="mr-5 flex justify-end gap-2">
-        <Link className="text-blue-500" href={`/journal/post/edit/${post.id}`}>
-          edit
-        </Link>
-        <button
-          onClick={() => handleDeletePostClick(post.id)}
-          className="text-blue-500"
-        >
-          delete
-        </button>
-      </div>
-    );
-  };
 
   return (
     <>

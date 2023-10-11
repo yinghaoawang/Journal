@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { router, privateProcedure } from '~/server/trpc/trpc';
+import { router, privateProcedure, publicProcedure } from '~/server/trpc/trpc';
 
 export const followsRouter = router({
   getFollowingIds: privateProcedure
@@ -34,7 +34,7 @@ export const followsRouter = router({
 
       return follows.map((data) => data.followerId);
     }),
-  getFollowerCount: privateProcedure
+  getFollowerCount: publicProcedure
     .input(
       z.object({
         userId: z.string()
@@ -49,7 +49,7 @@ export const followsRouter = router({
 
       return count;
     }),
-  getFollowingCount: privateProcedure
+  getFollowingCount: publicProcedure
     .input(
       z.object({
         userId: z.string()
