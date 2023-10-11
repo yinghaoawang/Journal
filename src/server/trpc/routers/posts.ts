@@ -6,6 +6,7 @@ import { Redis } from '@upstash/redis'; // see below for cloudflare and fastly a
 import { router, publicProcedure, privateProcedure } from '~/server/trpc/trpc';
 import { TRPCError } from '@trpc/server';
 import { filterUserForClient } from './users';
+import { isUserTrustAuth } from './profile';
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -40,7 +41,9 @@ export const postsRouter = router({
       await clerkClient.users.getUserList({
         userId: posts.map((post) => post.userId)
       })
-    ).map(filterUserForClient);
+    )
+      .filter((user) => user.publicMetadata?.isPublic) // only fetch public users
+      .map(filterUserForClient);
     return posts.map((post) => ({
       ...post,
       user: filteredUsers.find((u) => u.id === post.userId)
@@ -53,13 +56,24 @@ export const postsRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const posts = await ctx.db.post.findFirst({
+      const post = await ctx.db.post.findFirst({
         where: {
           id: input.id,
           deleted: false
         }
       });
-      return posts;
+
+      const authUserId = ctx.userId;
+      const authUser = authUserId
+        ? await clerkClient.users.getUser(authUserId)
+        : null;
+
+      const userId = post?.userId;
+      if (userId == null) return null;
+      const user = await clerkClient.users.getUser(userId);
+
+      if (!(await isUserTrustAuth(authUser, user, ctx.db))) return null;
+      return post;
     }),
   getByUserId: publicProcedure
     .input(
@@ -69,6 +83,16 @@ export const postsRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
+      const authUserId = ctx.userId;
+      const authUser = authUserId
+        ? await clerkClient.users.getUser(authUserId)
+        : null;
+      const user = await clerkClient.users.getUser(input.userId);
+      if (!(await isUserTrustAuth(authUser, user, ctx.db))) {
+        console.error('user is not trusted');
+        return null;
+      }
+
       const posts = await ctx.db.post.findMany({
         where: {
           userId: input.userId,
