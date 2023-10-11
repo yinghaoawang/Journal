@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { type GetServerSideProps } from 'next';
 import { type FilteredUser } from '~/server/trpc/routers/users';
+import { getAuth } from '@clerk/nextjs/server';
 
 const FollowUserButton = ({ user }: { user: FilteredUser }) => {
   const { user: authUser, isLoaded: isAuthUserLoaded } = useUser();
@@ -240,14 +241,18 @@ const UserPage = ({ user }: { user: FilteredUser }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  params
+}) => {
+  const { userId: authUserId } = getAuth(req);
   const helpers = createServerSideHelpers({
     router: appRouter,
-    ctx: { db, userId: null },
+    ctx: { db, userId: authUserId },
     transformer: superjson
   });
 
-  const userId = context.params?.userId;
+  const userId = params?.userId;
   if (typeof userId !== 'string') throw new Error('No userId in search params');
 
   const user = await helpers.users.getById.fetch({ userId });

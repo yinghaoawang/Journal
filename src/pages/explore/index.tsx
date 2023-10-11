@@ -4,7 +4,7 @@ import { LoadingPage } from '~/components/loading';
 import { trpc } from '~/utils/trpc';
 
 export default function ExplorePage() {
-  const { data, isLoading } = trpc.users.getAll.useQuery();
+  const { data, isLoading } = trpc.users.getPublicUsers.useQuery();
   if (isLoading) return <LoadingPage />;
   return (
     <Layout>

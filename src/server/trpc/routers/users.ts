@@ -2,7 +2,8 @@ import { clerkClient } from '@clerk/nextjs';
 import { type User } from '@clerk/nextjs/dist/types/server';
 import { z } from 'zod';
 
-import { router, publicProcedure } from '~/server/trpc/trpc';
+import { router, publicProcedure, privateProcedure } from '~/server/trpc/trpc';
+import { isUserTrustAuth } from './profile';
 
 export type FilteredUser = {
   id: string;
@@ -30,7 +31,7 @@ export const filterUserForClient = (user: User): FilteredUser => {
 };
 
 export const usersRouter = router({
-  getAll: publicProcedure.query(async () => {
+  getPublicUsers: publicProcedure.query(async () => {
     const users = await clerkClient.users.getUserList();
     return users
       .filter((user) => user?.publicMetadata?.isPublic)
@@ -38,9 +39,13 @@ export const usersRouter = router({
   }),
   getById: publicProcedure
     .input(z.object({ userId: z.string() }))
-    .query(async ({ input }) => {
+    .query(async ({ ctx, input }) => {
+      const authUserId = ctx.userId;
+      const authUser = authUserId
+        ? await clerkClient.users.getUser(authUserId)
+        : null;
       const user = await clerkClient.users.getUser(input.userId);
-      if (!user?.publicMetadata?.isPublic) return null;
+      if (!(await isUserTrustAuth(authUser, user, ctx.db))) return null;
       return filterUserForClient(user);
     })
 });

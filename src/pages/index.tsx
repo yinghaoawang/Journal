@@ -48,7 +48,7 @@ export const getServerSideProps = async ({ req }: { req: NextRequest }) => {
 
   return {
     props: {
-      authUser: JSON.parse(JSON.stringify(user)) as User
+      authUser: JSON.parse(JSON.stringify(user)) as FilteredUser
     }
   };
 };

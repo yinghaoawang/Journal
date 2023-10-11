@@ -25,7 +25,7 @@ export const getServerSideProps = async () => {
     transformer: superjson
   });
 
-  const users = await helpers.users.getAll.fetch();
+  const users = await helpers.users.getPublicUsers.fetch();
 
   return {
     props: {
