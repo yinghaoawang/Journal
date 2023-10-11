@@ -1,8 +1,11 @@
-import { clerkClient } from '@clerk/nextjs';
 import { SignInButton } from '@clerk/nextjs';
 import UserPage from './user/[userId]';
-import { type User, getAuth } from '@clerk/nextjs/server';
-import { type NextRequest } from 'next/server';
+import { getAuth, type User } from '@clerk/nextjs/server';
+import { createServerSideHelpers } from '@trpc/react-query/server';
+import { appRouter } from '~/server/trpc/root';
+import superjson from 'superjson';
+import { db } from '~/server/db';
+import { NextRequest } from 'next/server';
 
 export const LandingPage = () => {
   return (
@@ -33,7 +36,14 @@ export default function HomePage({ authUser }: { authUser: User }) {
 
 export const getServerSideProps = async ({ req }: { req: NextRequest }) => {
   const { userId } = getAuth(req);
-  const user = userId ? await clerkClient.users.getUser(userId) : null;
+
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: { db, userId: null },
+    transformer: superjson
+  });
+  const user =
+    userId != null ? await helpers.users.getById.fetch({ userId }) : null;
 
   return {
     props: {
