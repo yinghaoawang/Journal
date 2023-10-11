@@ -9,11 +9,16 @@ import { type FilteredUser } from '~/server/trpc/routers/users';
 
 export default function AllPostsView({
   user,
-  posts
+  posts,
+  isProfileHidden
 }: {
   user: FilteredUser;
   posts: Post[];
+  isProfileHidden: boolean;
 }) {
+  if (isProfileHidden && posts?.length > 0)
+    throw new Error('Posts received for private profile');
+
   const { user: authUser } = useUser();
   const utils = trpc.useContext();
 
@@ -78,6 +83,7 @@ export default function AllPostsView({
           </>
         )}
       </div>
+      {isProfileHidden && <div>This user has a private profile.</div>}
       {posts.map((post, index) => (
         <div
           className={cn(

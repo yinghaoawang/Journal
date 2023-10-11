@@ -40,7 +40,7 @@ export const getServerSideProps = async ({ req }: { req: NextRequest }) => {
 
   const helpers = createServerSideHelpers({
     router: appRouter,
-    ctx: { db, userId: null },
+    ctx: { db, userId },
     transformer: superjson
   });
   const user =

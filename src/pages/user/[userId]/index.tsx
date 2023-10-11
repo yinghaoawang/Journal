@@ -55,7 +55,7 @@ const FollowUserButton = ({ user }: { user: FilteredUser }) => {
     });
 
   const { data: isFollowing, isLoading: followCheckLoading } =
-    trpc.follows.isFollowingById.useQuery({
+    trpc.follows.isAuthFollowingUser.useQuery({
       followingUserId: user.id
     });
 

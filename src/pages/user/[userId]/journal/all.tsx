@@ -1,8 +1,5 @@
-import { LoadingPage } from '~/components/loading';
-import { trpc } from '~/utils/trpc';
 import Layout from '~/components/layouts/layout';
 import AllPostsView from '~/components/post-views/all-posts-view';
-import Custom404Page from '~/pages/404';
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import { appRouter } from '~/server/trpc/root';
 import { db } from '~/server/db';
@@ -10,62 +7,58 @@ import superjson from 'superjson';
 import { type GetServerSideProps } from 'next';
 import { type Post } from '@prisma/client';
 import { type FilteredUser } from '~/server/trpc/routers/users';
-
-export const JournalPageContent = ({ userId }: { userId: string }) => {
-  const { data: user, isLoading: isUserLoading } = trpc.users.getById.useQuery({
-    userId
-  });
-
-  const { data: posts, isLoading: isPostsLoading } =
-    trpc.posts.getByUserId.useQuery({
-      userId,
-      orderBy: 'desc'
-    });
-
-  if (isUserLoading || isPostsLoading) return <LoadingPage />;
-  if (user == null || posts == null) return <Custom404Page />;
-
-  return (
-    <Layout>
-      <AllPostsView posts={posts} user={user} />
-    </Layout>
-  );
-};
+import { getAuth } from '@clerk/nextjs/server';
 
 export default function UserJournalAllPage({
   user,
-  posts
+  posts,
+  isProfileHidden
 }: {
   user: FilteredUser;
   posts: Post[];
+  isProfileHidden: boolean;
 }) {
   return (
     <Layout>
-      <AllPostsView posts={posts} user={user} />
+      <AllPostsView
+        posts={posts}
+        user={user}
+        isProfileHidden={isProfileHidden}
+      />
     </Layout>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  params
+}) => {
+  const { userId: authUserId } = getAuth(req);
   const helpers = createServerSideHelpers({
     router: appRouter,
-    ctx: { db, userId: null },
+    ctx: { db, userId: authUserId },
     transformer: superjson
   });
 
-  const userId = context.params?.userId;
+  const userId = params?.userId;
   if (typeof userId !== 'string') throw new Error('No userId in search params');
 
-  const user = await helpers.users.getById.fetch({ userId });
-  const posts = await helpers.posts.getByUserId.fetch({
-    userId,
-    orderBy: 'desc'
+  const isProfileHidden = await helpers.profile.isUserHiddenToAuth.fetch({
+    userId
   });
+  const user = await helpers.users.getById.fetch({ userId });
+  const posts = !isProfileHidden
+    ? await helpers.posts.getByUserId.fetch({
+        userId,
+        orderBy: 'desc'
+      })
+    : [];
 
   return {
     props: {
       user: JSON.parse(JSON.stringify(user)) as FilteredUser,
-      posts: JSON.parse(JSON.stringify(posts)) as Post[]
+      posts: JSON.parse(JSON.stringify(posts)) as Post[],
+      isProfileHidden
     }
   };
 };

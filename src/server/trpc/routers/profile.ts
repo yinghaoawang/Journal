@@ -1,9 +1,36 @@
 import { clerkClient } from '@clerk/nextjs';
 import { z } from 'zod';
 
-import { router, privateProcedure } from '~/server/trpc/trpc';
+import { router, privateProcedure, publicProcedure } from '~/server/trpc/trpc';
 
 export const profileRouter = router({
+  isUserHiddenToAuth: publicProcedure
+    .input(
+      z.object({
+        userId: z.string()
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const authUserId = ctx.userId;
+
+      const user = await clerkClient.users.getUser(input.userId);
+
+      // if session user is not logged in, only need to check if target user is public
+      if (authUserId == null) {
+        return !user?.publicMetadata?.isPublic;
+      }
+
+      if (input.userId == authUserId) return false; // not hidden if user is auth user
+      const isFollowingAuth = await ctx.db.follow.findFirst({
+        where: {
+          followerId: input.userId,
+          followingId: authUserId
+        }
+      });
+      if (isFollowingAuth) return false; // not hidden if user is following auth user
+      if (user?.publicMetadata?.isPublic) return false; // not hidden if user is public
+      return true; // hidden otherwise
+    }),
   updateDescription: privateProcedure
     .input(
       z.object({

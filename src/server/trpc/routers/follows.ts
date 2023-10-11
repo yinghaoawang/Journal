@@ -64,7 +64,24 @@ export const followsRouter = router({
 
       return count;
     }),
-  isFollowingById: privateProcedure
+  isUserFollowingAuth: privateProcedure
+    .input(
+      z.object({
+        followerUserId: z.string()
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const authUserId = ctx.userId;
+      const follow = await ctx.db.follow.findFirst({
+        where: {
+          followerId: authUserId,
+          followingId: input.followerUserId
+        }
+      });
+
+      return follow != null;
+    }),
+  isAuthFollowingUser: privateProcedure
     .input(
       z.object({
         followingUserId: z.string()
@@ -72,14 +89,14 @@ export const followsRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const authUserId = ctx.userId;
-      const follower = await ctx.db.follow.findFirst({
+      const follow = await ctx.db.follow.findFirst({
         where: {
           followerId: authUserId,
           followingId: input.followingUserId
         }
       });
 
-      return follower != null;
+      return follow != null;
     }),
   followUser: privateProcedure
     .input(

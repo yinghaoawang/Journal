@@ -35,7 +35,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const helpers = createServerSideHelpers({
     router: appRouter,
-    ctx: { db, userId: null },
+    ctx: { db, userId },
     transformer: superjson
   });
 
