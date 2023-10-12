@@ -151,6 +151,7 @@ const UserDescription = ({ user }: { user: FilteredUser }) => {
     trpc.profile.updateDescription.useMutation({
       onSuccess: () => {
         setIsEditing(false);
+        void authUser?.reload();
         toast.success('Description updated successfully!');
       },
       onError: (error) => {

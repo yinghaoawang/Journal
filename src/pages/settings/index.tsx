@@ -9,7 +9,13 @@ import dayjs from 'dayjs';
 import { trpc } from '~/utils/trpc';
 import toast from 'react-hot-toast';
 
-const SettingsForm = ({ user }: { user: User }) => {
+const SettingsForm = ({
+  user,
+  onUserUpdate
+}: {
+  user: User;
+  onUserUpdate: () => void;
+}) => {
   const { emailAddresses, firstName, lastName, createdAt, publicMetadata } =
     user;
 
@@ -24,6 +30,7 @@ const SettingsForm = ({ user }: { user: User }) => {
     trpc.profile.updateSettings.useMutation({
       onSuccess: () => {
         toast.success(`Settings updated successfully!`);
+        onUserUpdate();
       },
       onError: (error) => {
         if (error?.data?.zodError) {
@@ -98,12 +105,20 @@ const SettingsForm = ({ user }: { user: User }) => {
 
 export default function SettingsPage() {
   const { user: authUser, isLoaded: isAuthUserLoaded } = useUser();
+  const userUpdateHandler = () => {
+    void authUser?.reload();
+  };
   if (!isAuthUserLoaded) return <LoadingPage />;
   if (authUser == null) return <Custom404Page />;
   return (
     <Layout>
       <h2 className="mb-6 text-2xl font-bold">Settings</h2>
-      {isAuthUserLoaded && <SettingsForm user={authUser as unknown as User} />}
+      {isAuthUserLoaded && (
+        <SettingsForm
+          onUserUpdate={userUpdateHandler}
+          user={authUser as unknown as User}
+        />
+      )}
     </Layout>
   );
 }
