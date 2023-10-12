@@ -13,7 +13,7 @@ const setUserDefaults = async (userId: string) => {
 
 export default authMiddleware({
   publicRoutes: ['/(.*)'],
-  afterAuth(auth, req, evt) {
+  afterAuth(auth) {
     const { userId } = auth;
     if (userId == null) return;
     void setUserDefaults(userId);

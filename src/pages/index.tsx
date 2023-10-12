@@ -1,6 +1,6 @@
 import { SignInButton } from '@clerk/nextjs';
 import UserPage from './user/[userId]';
-import { getAuth, type User } from '@clerk/nextjs/server';
+import { getAuth } from '@clerk/nextjs/server';
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import { appRouter } from '~/server/trpc/root';
 import superjson from 'superjson';
