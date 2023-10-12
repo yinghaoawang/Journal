@@ -70,8 +70,8 @@ export default function AllPostsView({
     <>
       <div className="flex justify-between">
         <h2 className="flex items-end pb-1 text-2xl font-bold">
-          {isCurrentUser ? 'My' : `${user?.displayName ?? user.firstName}'s`}{' '}
-          Journal Posts
+          {isCurrentUser ? 'My' : `${user?.displayName ?? user.firstName}'s`}
+          &nbsp;Journal Posts
         </h2>
         {isCurrentUser && (
           <>

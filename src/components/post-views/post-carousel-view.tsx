@@ -77,16 +77,11 @@ export default function PostCarouselView({
     if (posts == null) {
       return;
     }
-    if (currentPostIndex < 0) {
-      setCurrentPostIndex(0);
-      return;
-    }
-    if (currentPostIndex > posts.length - 1) {
-      console.error('currentPostIndex is out of bounds');
-      setCurrentPostIndex(posts.length - 1);
-      return;
-    }
-    setCurrentPost(posts[currentPostIndex]);
+    const clampedIndex = Math.min(
+      Math.max(currentPostIndex, 0),
+      posts.length - 1
+    );
+    setCurrentPost(posts[clampedIndex]);
   }, [currentPostIndex, posts]);
 
   const { data: isProfileHidden } = trpc.profile.isUserHiddenToAuth.useQuery({
@@ -106,8 +101,8 @@ export default function PostCarouselView({
     <>
       <div className={cn('flex justify-between', className)}>
         <h2 className="flex items-end pb-1 text-2xl font-bold">
-          {isCurrentUser ? 'My' : `${user?.displayName ?? user.firstName}'s`}{' '}
-          Journal Posts
+          {isCurrentUser ? 'My' : `${user?.displayName ?? user.firstName}'s`}
+          &nbsp;Journal Posts
         </h2>
         {isCurrentUser && (
           <>
@@ -126,7 +121,14 @@ export default function PostCarouselView({
           </>
         )}
       </div>
-      {currentPost == null && <LoadingSpinner />}
+      {isLoading && <LoadingSpinner />}
+      {!isLoading && posts?.length === 0 && (
+        <span className="mt-4 italic">
+          {isCurrentUser
+            ? "You don't have any posts, you should create one!"
+            : user?.displayName ?? user.firstName + " doesn't have any posts."}
+        </span>
+      )}
       {currentPost && (
         <div className="my-5 flex flex-col">
           <div className="flex gap-3">
