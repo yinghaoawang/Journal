@@ -46,13 +46,13 @@ export default function Navbar() {
             <Link href="/feed">
               <div className="flex items-center">
                 <LuNewspaper size={22} className="sm:hidden" />
-                <span className="hidden sm:inline-block">Settings</span>
+                <span className="hidden sm:inline-block">Feed</span>
               </div>
             </Link>
             <Link href="/explore">
               <div className="flex items-center">
                 <LuCompass size={22} className="sm:hidden" />
-                <span className="hidden sm:inline-block">Settings</span>
+                <span className="hidden sm:inline-block">Explore</span>
               </div>
             </Link>
             <Link href="/settings">
