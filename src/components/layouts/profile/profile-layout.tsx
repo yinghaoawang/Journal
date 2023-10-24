@@ -218,16 +218,16 @@ const UserDescription = ({ user }: { user: FilteredUser }) => {
 
 const ProfileSidebar = ({ user }: { user: FilteredUser }) => {
   return (
-    <div className="w-[350px] shrink-0 border-r border-r-gray-300 bg-white px-10 py-4">
+    <div className="hidden w-[350px] shrink-0 border-r border-r-gray-300 bg-white px-10 py-4 lg:block">
       <UserDetails user={user} />
       <section className="mt-4 flex border-b border-b-gray-300 py-3">
         <Link href={`/user/${user.id}/journal/all`} className="text-blue-500">
-          all posts view
+          all posts
         </Link>
       </section>
       <section className="flex border-b border-b-gray-300 py-3">
         <Link href={`/user/${user.id}/journal/`} className="text-blue-500">
-          single post view
+          single post
         </Link>
       </section>
     </div>
@@ -254,7 +254,7 @@ export default function ProfileLayout({
         <Navbar />
         <div className="flex flex-1 grow">
           <ProfileSidebar user={user} />
-          <div className={cn('flex w-full flex-col px-10', className)}>
+          <div className={cn('mt-4 flex w-full flex-col px-10', className)}>
             {children}
           </div>
         </div>

@@ -90,10 +90,7 @@ export default function AllPostsView({
       {isProfileHidden && <UserIsPrivateText className="mt-4" />}
       {posts.map((post, index) => (
         <div
-          className={cn(
-            'mt-10 flex flex-col pb-12',
-            index < posts.length - 1 && 'border-b-[2px] border-b-gray-300'
-          )}
+          className={cn('mt-10 flex flex-col pb-12', index < posts.length - 1)}
           key={post.id}
         >
           {isCurrentUser && <UserActionLinks post={post} />}
