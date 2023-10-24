@@ -267,7 +267,7 @@ export default function ProfileLayout({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex min-h-screen flex-col">
-        <Navbar />
+        <Navbar showMenu={true} />
         <div className="flex flex-1 grow">
           <ReactSlidingPane
             isOpen={isOpen}

@@ -17,7 +17,7 @@ import { SidebarContext } from '~/contexts/sidebar-context';
 
 const logoFont = Bad_Script({ subsets: ['latin'], weight: '400' });
 
-export default function Navbar() {
+export default function Navbar({ showMenu }: { showMenu?: boolean }) {
   const { setIsOpen } = useContext(SidebarContext);
   const { user, isSignedIn } = useUser();
   const displayName =
@@ -25,7 +25,9 @@ export default function Navbar() {
   return (
     <div className="flex h-[var(--navbar-height)] items-center justify-between bg-white text-gray-600">
       <div>
-        <div className="mx-5 hidden space-x-5 lg:flex">
+        <div
+          className={cn('mx-5 hidden space-x-5 lg:flex', !showMenu && '!flex')}
+        >
           <Link
             className={cn('flex items-center gap-3', logoFont.className)}
             href="/"
@@ -36,12 +38,14 @@ export default function Navbar() {
             </span>
           </Link>
         </div>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="mx-5 block w-full grow lg:hidden"
-        >
-          <LuMenu size={22} />
-        </button>
+        {showMenu && (
+          <button
+            onClick={() => setIsOpen(true)}
+            className="mx-5 block w-full grow lg:hidden"
+          >
+            <LuMenu size={22} />
+          </button>
+        )}
       </div>
       <div className="mx-5 flex items-center space-x-10 sm:space-x-5">
         {!isSignedIn && <SignInButton />}
