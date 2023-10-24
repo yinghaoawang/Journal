@@ -12,10 +12,13 @@ import {
   LuNewspaper,
   LuMenu
 } from 'react-icons/lu';
+import { useContext } from 'react';
+import { SidebarContext } from '~/contexts/sidebar-context';
 
 const logoFont = Bad_Script({ subsets: ['latin'], weight: '400' });
 
 export default function Navbar() {
+  const { setIsOpen } = useContext(SidebarContext);
   const { user, isSignedIn } = useUser();
   const displayName =
     (user?.publicMetadata?.displayName as string) ?? user?.firstName;
@@ -34,7 +37,7 @@ export default function Navbar() {
           </Link>
         </div>
         <button
-          onClick={() => console.log('hey')}
+          onClick={() => setIsOpen(true)}
           className="mx-5 block w-full grow lg:hidden"
         >
           <LuMenu size={22} />

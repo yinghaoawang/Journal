@@ -3,15 +3,15 @@ import type { AppProps } from 'next/app';
 import { trpc } from '~/utils/trpc';
 
 import '~/styles/globals.css';
-import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from 'react-hot-toast';
+import Providers from '~/contexts/providers';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <ClerkProvider>
+    <Providers>
       <Toaster />
       <Component {...pageProps} />
-    </ClerkProvider>
+    </Providers>
   );
 };
 

@@ -11,6 +11,10 @@ import cn from 'classnames';
 import { useUser } from '@clerk/nextjs';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
+import ReactSlidingPane from 'react-sliding-pane';
+import 'react-sliding-pane/dist/react-sliding-pane.css';
+import { SidebarContext } from '~/contexts/sidebar-context';
+import { useContext } from 'react';
 
 const UserDetails = ({ user }: { user: FilteredUser }) => {
   return (
@@ -216,9 +220,20 @@ const UserDescription = ({ user }: { user: FilteredUser }) => {
   );
 };
 
-const ProfileSidebar = ({ user }: { user: FilteredUser }) => {
+const ProfileSidebar = ({
+  user,
+  className
+}: {
+  user: FilteredUser;
+  className?: string;
+}) => {
   return (
-    <div className="hidden w-[350px] shrink-0 border-r border-r-gray-300 bg-white px-10 py-4 lg:block">
+    <div
+      className={cn(
+        'shrink-0 border-r border-r-gray-300 bg-white px-10 py-4',
+        className
+      )}
+    >
       <UserDetails user={user} />
       <section className="mt-4 flex border-b border-b-gray-300 py-3">
         <Link href={`/user/${user.id}/journal/all`} className="text-blue-500">
@@ -243,6 +258,7 @@ export default function ProfileLayout({
   user: FilteredUser;
   className?: string;
 }) {
+  const { isOpen, setIsOpen } = useContext(SidebarContext);
   return (
     <>
       <Head>
@@ -253,7 +269,15 @@ export default function ProfileLayout({
       <div className="flex min-h-screen flex-col">
         <Navbar />
         <div className="flex flex-1 grow">
-          <ProfileSidebar user={user} />
+          <ReactSlidingPane
+            isOpen={isOpen}
+            from="left"
+            width="350px"
+            onRequestClose={() => setIsOpen(false)}
+          >
+            <ProfileSidebar user={user} />
+          </ReactSlidingPane>
+          <ProfileSidebar className="hidden w-[350px] lg:block" user={user} />
           <div className={cn('mt-4 flex w-full flex-col px-10', className)}>
             {children}
           </div>
