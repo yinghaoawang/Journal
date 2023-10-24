@@ -18,7 +18,7 @@ export default function ContentWrapper({
         className={cn(
           'content-height flex w-full max-w-[700px] flex-col px-8 py-5',
           className,
-          innerBackground ?? 'bg-gray-100'
+          innerBackground ?? 'bg-white'
         )}
       >
         {children}

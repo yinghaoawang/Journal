@@ -19,7 +19,7 @@ export default function Navbar() {
   const displayName =
     (user?.publicMetadata?.displayName as string) ?? user?.firstName;
   return (
-    <div className="flex h-[var(--navbar-height)] items-center justify-between bg-black-pearl-900 text-gray-200">
+    <div className="flex h-[var(--navbar-height)] items-center justify-between bg-white text-gray-600">
       <div className="mx-5 flex space-x-5">
         <Link
           className={cn('flex items-center gap-3', logoFont.className)}
