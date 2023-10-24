@@ -15,8 +15,8 @@ import Link from 'next/link';
 const UserDetails = ({ user }: { user: FilteredUser }) => {
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex flex-col justify-between gap-0 sm:flex-row sm:gap-10">
-        <div className="flex justify-center sm:justify-start">
+      <div className="flex flex-col justify-between">
+        <div className="flex justify-center">
           <Image
             className="rounded-full"
             src={user.imageUrl}
@@ -25,10 +25,17 @@ const UserDetails = ({ user }: { user: FilteredUser }) => {
             height={120}
           />
         </div>
-        <UserFollowStats user={user} />
       </div>
-      <div>
-        <UserDescription user={user} />
+      <div className="flex flex-col gap-2">
+        <h1 className="flex justify-center text-2xl font-bold">
+          {user?.displayName ?? user.firstName}
+        </h1>
+        <div className="flex flex-col items-center">
+          <UserDescription user={user} />
+        </div>
+        <div className="flex justify-center">
+          <FollowUserButton user={user} />
+        </div>
       </div>
     </div>
   );
@@ -98,8 +105,8 @@ const FollowUserButton = ({ user }: { user: FilteredUser }) => {
       }}
       disabled={isCurrentUser || isLoading}
       className={cn(
-        'button flex h-10 w-full items-center justify-center rounded-md px-5 py-2 font-semibold',
-        isFollowing && '!bg-red-600 !text-gray-100'
+        'button flex h-10 w-40 items-center justify-center rounded-md px-5 py-2 font-semibold',
+        isFollowing && '!bg-red-500 !text-gray-100 hover:!bg-red-500/90'
       )}
     >
       {isLoading && <LoadingSpinner size={15} />}
@@ -121,7 +128,7 @@ const UserFollowStats = ({ user }: { user: FilteredUser }) => {
 
   const itemClass = 'w-20 flex flex-col';
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col items-center gap-3">
       <div className="mr-3 mt-3 flex grow items-center justify-center gap-4 text-center font-semibold sm:grow-0 sm:justify-end">
         <div className={cn(itemClass)}>
           <span>
@@ -149,9 +156,6 @@ const UserFollowStats = ({ user }: { user: FilteredUser }) => {
           </span>
           Following
         </div>
-      </div>
-      <div className="flex justify-center">
-        <FollowUserButton user={user} />
       </div>
     </div>
   );
@@ -214,17 +218,14 @@ const UserDescription = ({ user }: { user: FilteredUser }) => {
 
 const ProfileSidebar = ({ user }: { user: FilteredUser }) => {
   return (
-    <div className="w-[500px] shrink-0 bg-white px-6 py-4">
-      <h1 className="mb-4 flex justify-center text-2xl font-bold sm:justify-start">
-        {user?.displayName ?? user.firstName}
-        &apos;s Profile
-      </h1>
+    <div className="w-[350px] shrink-0 border-r border-r-gray-300 bg-white px-10 py-4">
       <UserDetails user={user} />
-      <section className="border-b border-b-gray-300 pb-12"></section>
-      <section className="flex gap-4 border-b border-b-gray-300 py-3">
+      <section className="mt-4 flex border-b border-b-gray-300 py-3">
         <Link href={`/user/${user.id}/journal/all`} className="text-blue-500">
           all posts view
         </Link>
+      </section>
+      <section className="flex border-b border-b-gray-300 py-3">
         <Link href={`/user/${user.id}/journal/`} className="text-blue-500">
           single post view
         </Link>
@@ -253,7 +254,9 @@ export default function ProfileLayout({
         <Navbar />
         <div className="flex flex-1 grow">
           <ProfileSidebar user={user} />
-          <div className="flex flex-col px-10">{children}</div>
+          <div className={cn('flex w-full flex-col px-10', className)}>
+            {children}
+          </div>
         </div>
         <Footer />
       </div>

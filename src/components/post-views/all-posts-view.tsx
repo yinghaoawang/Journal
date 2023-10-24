@@ -68,20 +68,23 @@ export default function AllPostsView({
 
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-2">
         <h2 className="flex items-end pb-1 text-2xl font-bold">
           {isCurrentUser ? 'My' : `${user?.displayName ?? user.firstName}'s`}
           &nbsp;Journal Posts
         </h2>
         {isCurrentUser && (
-          <>
-            <Link className="button hidden sm:block" href="/journal/post/new">
+          <div className="flex items-center">
+            <Link
+              className="button hidden justify-center sm:block"
+              href="/journal/post/new"
+            >
               Create New Post
             </Link>
-            <Link className=" button block sm:hidden" href="/journal/post/new">
+            <Link className="button block sm:hidden" href="/journal/post/new">
               +
             </Link>
-          </>
+          </div>
         )}
       </div>
       {isProfileHidden && <UserIsPrivateText className="mt-4" />}
@@ -89,7 +92,7 @@ export default function AllPostsView({
         <div
           className={cn(
             'mt-10 flex flex-col pb-12',
-            index < posts.length - 1 && 'border-b-[3px] border-b-gray-600'
+            index < posts.length - 1 && 'border-b-[2px] border-b-gray-300'
           )}
           key={post.id}
         >

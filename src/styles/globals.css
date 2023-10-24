@@ -28,6 +28,12 @@ body {
 }
 
 .journal-lines {
+  line-height: 2rem;
+  padding-block: 0;
+}
+
+/*
+.journal-lines {
   font-size: 16px;
   line-height: var(--j-line-height);
   padding-block: 0;
@@ -40,22 +46,23 @@ body {
       calc(var(--j-line-height) - var(--j-line-offset) + var(--j-line-size))
       var(--j-line-height)
   );
-  /* 50% 0 / calc(100% - var(--j-line-height) * 2) 100% no-repeat; */
-}
+  // 50% 0 / calc(100% - var(--j-line-height) * 2) 100% no-repeat;
+} 
+*/
 
 .landing-sign-in-button-container > button {
   @apply w-[200px] items-stretch justify-stretch rounded-3xl bg-green-500 px-5 py-3 font-semibold text-gray-100;
 }
 
 .form-item > input {
-  @apply border border-gray-800 rounded-md text-right pr-1;
+  @apply rounded-md border border-gray-800 pr-1 text-right;
 }
 
 .form-item > label {
   @apply font-bold;
 }
 
-.button { 
+.button {
   @apply rounded-md bg-green-500 px-5 py-2 font-semibold text-gray-100;
 }
 

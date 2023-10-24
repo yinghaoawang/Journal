@@ -7,7 +7,7 @@ import FeedContentView from '~/components/post-views/feed-content-view';
 
 const FeedContent = ({ feedContents }: { feedContents: FeedContent[] }) => {
   return (
-    <div className="flex flex-col gap-8">
+    <div>
       {feedContents != null && feedContents.length === 0 && (
         <span className="mt-[-1rem] italic">
           You aren&apos;t following anybody, visit the&nbsp;
@@ -17,7 +17,10 @@ const FeedContent = ({ feedContents }: { feedContents: FeedContent[] }) => {
           &nbsp;to discover users!
         </span>
       )}
-      <FeedContentView feedContents={feedContents} />
+      <FeedContentView
+        className="flex flex-col gap-8"
+        feedContents={feedContents}
+      />
     </div>
   );
 };

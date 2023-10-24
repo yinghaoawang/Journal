@@ -1,4 +1,4 @@
-import Layout from '~/components/layouts/layout';
+import ProfileLayout from '~/components/layouts/profile/profile-layout';
 import AllPostsView from '~/components/post-views/all-posts-view';
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import { appRouter } from '~/server/trpc/root';
@@ -19,13 +19,13 @@ export default function UserJournalAllPage({
   isProfileHidden: boolean;
 }) {
   return (
-    <Layout>
+    <ProfileLayout user={user}>
       <AllPostsView
         posts={posts}
         user={user}
         isProfileHidden={isProfileHidden}
       />
-    </Layout>
+    </ProfileLayout>
   );
 }
 
