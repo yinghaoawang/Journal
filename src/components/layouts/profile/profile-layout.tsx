@@ -281,7 +281,7 @@ export default function ProfileLayout({
       </Head>
       <div className="flex min-h-screen flex-col">
         <Navbar showMenu={true} />
-        <div className="flex flex-1 grow">
+        <div className="flex flex-1 grow justify-center">
           <ReactSlidingPane
             isOpen={isOpen}
             from="left"

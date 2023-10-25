@@ -3,13 +3,8 @@ import type { ReactNode } from 'react';
 import Navbar from '~/components/layouts/navbar';
 import Footer from '~/components/layouts/footer';
 import { type FilteredUser } from '~/server/trpc/routers/users';
-import toast from 'react-hot-toast';
-import { trpc } from '~/utils/trpc';
-import { LoadingSpinner } from '~/components/loading';
 import Image from 'next/image';
 import cn from 'classnames';
-import { useUser } from '@clerk/nextjs';
-import { type ChangeEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
 import ReactSlidingPane from 'react-sliding-pane';
 import 'react-sliding-pane/dist/react-sliding-pane.css';
@@ -82,7 +77,7 @@ export default function FeedLayout({
       </Head>
       <div className="flex min-h-screen flex-col">
         <Navbar showMenu={true} />
-        <div className="flex flex-1 grow">
+        <div className="flex flex-1 grow justify-center">
           <ReactSlidingPane
             isOpen={isOpen}
             from="left"
