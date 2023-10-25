@@ -1,9 +1,39 @@
+import { clerkClient } from '@clerk/nextjs';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { router, privateProcedure, publicProcedure } from '~/server/trpc/trpc';
+import { filterUserForClient } from './users';
 
 export const followsRouter = router({
+  getAuthFollowingUsers: privateProcedure.query(async ({ ctx }) => {
+    const authUserId = ctx.userId;
+    const follows = (
+      await ctx.db.follow.findMany({
+        where: {
+          followerId: authUserId
+        }
+      })
+    ).map((data) => data.followingId);
+    const users = (await clerkClient.users.getUserList()).filter((u) =>
+      follows.includes(u.id)
+    );
+    return users.map(filterUserForClient);
+  }),
+  getAuthFollowerUsers: privateProcedure.query(async ({ ctx }) => {
+    const authUserId = ctx.userId;
+    const follows = (
+      await ctx.db.follow.findMany({
+        where: {
+          followingId: authUserId
+        }
+      })
+    ).map((data) => data.followingId);
+    const users = (await clerkClient.users.getUserList()).filter((u) =>
+      follows.includes(u.id)
+    );
+    return users.map(filterUserForClient);
+  }),
   getFollowingIds: privateProcedure
     .input(
       z.object({

@@ -2,7 +2,7 @@ import { clerkClient } from '@clerk/nextjs';
 import { type User } from '@clerk/nextjs/dist/types/server';
 import { z } from 'zod';
 
-import { router, publicProcedure, privateProcedure } from '~/server/trpc/trpc';
+import { router, publicProcedure } from '~/server/trpc/trpc';
 import { isUserTrustAuth } from './profile';
 
 export type FilteredUser = {

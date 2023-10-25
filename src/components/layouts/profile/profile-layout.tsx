@@ -4,6 +4,7 @@ import Navbar from '~/components/layouts/navbar';
 import Footer from '~/components/layouts/footer';
 import { type FilteredUser } from '~/server/trpc/routers/users';
 import toast from 'react-hot-toast';
+import { FaUserPlus, FaUserMinus } from 'react-icons/fa';
 import { trpc } from '~/utils/trpc';
 import { LoadingSpinner } from '~/components/loading';
 import Image from 'next/image';
@@ -45,10 +46,20 @@ const UserDetails = ({ user }: { user: FilteredUser }) => {
   );
 };
 
-const FollowUserButton = ({ user }: { user: FilteredUser }) => {
+export const FollowUserButton = ({
+  user,
+  useIcons,
+  className
+}: {
+  user: FilteredUser;
+  useIcons?: boolean;
+  className?: string;
+}) => {
   const { user: authUser, isLoaded: isAuthUserLoaded } = useUser();
   const isCurrentUser = authUser?.id == user.id;
   const utils = trpc.useContext();
+  const followText = useIcons ? <FaUserPlus /> : 'Follow';
+  const unfollowText = useIcons ? <FaUserMinus /> : 'Unfollow';
   const { mutate: followUser, isLoading: isFollowLoading } =
     trpc.follows.followUser.useMutation({
       onSuccess: () => {
@@ -109,13 +120,15 @@ const FollowUserButton = ({ user }: { user: FilteredUser }) => {
       }}
       disabled={isCurrentUser || isLoading}
       className={cn(
-        'button flex h-10 w-40 items-center justify-center rounded-md px-5 py-2 font-semibold',
-        isFollowing && '!bg-red-500 !text-gray-100 hover:!bg-red-500/90'
+        'button flex items-center justify-center rounded-md font-semibold',
+        useIcons ? 'h-12 w-12 !p-0' : 'h-12 w-40 px-5 py-2',
+        isFollowing && '!bg-red-500 !text-gray-100 hover:!bg-red-500/90',
+        className
       )}
     >
       {isLoading && <LoadingSpinner size={15} />}
-      {!isLoading && !isFollowing && 'Follow'}
-      {!isLoading && isFollowing && 'Unfollow'}
+      {!isLoading && !isFollowing && followText}
+      {!isLoading && isFollowing && unfollowText}
     </button>
   );
 };
@@ -230,7 +243,7 @@ const ProfileSidebar = ({
   return (
     <div
       className={cn(
-        'shrink-0 border-r border-r-gray-300 bg-white px-10 py-4',
+        'shrink-0 border-r border-r-gray-300 bg-white px-8 py-4',
         className
       )}
     >
@@ -278,7 +291,12 @@ export default function ProfileLayout({
             <ProfileSidebar user={user} />
           </ReactSlidingPane>
           <ProfileSidebar className="hidden w-[350px] lg:block" user={user} />
-          <div className={cn('mt-4 flex w-full flex-col px-10', className)}>
+          <div
+            className={cn(
+              'mt-4 flex w-full max-w-[1000px] flex-col px-10',
+              className
+            )}
+          >
             {children}
           </div>
         </div>
