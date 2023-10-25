@@ -17,14 +17,20 @@ import { SidebarContext } from '~/contexts/sidebar-context';
 
 const logoFont = Bad_Script({ subsets: ['latin'], weight: '400' });
 
-export default function Navbar({ showMenu }: { showMenu?: boolean }) {
+export default function Navbar({
+  showMenu,
+  className
+}: {
+  showMenu?: boolean;
+  className?: string;
+}) {
   const { setIsOpen } = useContext(SidebarContext);
   const { user, isSignedIn } = useUser();
   const displayName =
     (user?.publicMetadata?.displayName as string) ?? user?.firstName;
   return (
-    <>
-      <div className="fixed flex h-[var(--navbar-height)] w-full items-center justify-between bg-white text-gray-600 lg:relative">
+    <div className={cn('flex justify-center', className)}>
+      <div className="fixed flex h-[var(--navbar-height)] w-full max-w-[1200px] items-center justify-between bg-white text-gray-600 lg:relative">
         <div>
           <div
             className={cn(
@@ -92,6 +98,6 @@ export default function Navbar({ showMenu }: { showMenu?: boolean }) {
         </div>
       </div>
       <div className="mt-[var(--navbar-height)] lg:hidden"></div>
-    </>
+    </div>
   );
 }

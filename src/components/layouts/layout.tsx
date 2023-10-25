@@ -6,14 +6,10 @@ import ContentWrapper from './content-wrapper';
 
 export default function Layout({
   children,
-  className,
-  outerBackground,
-  innerBackground
+  className
 }: {
   children: ReactNode;
   className?: string;
-  outerBackground?: string;
-  innerBackground?: string;
 }) {
   return (
     <>
@@ -24,14 +20,8 @@ export default function Layout({
       </Head>
       <div className="flex min-h-screen flex-col">
         <Navbar />
-        <div className="flex-1 grow">
-          <ContentWrapper
-            className={className}
-            outerBackground={outerBackground}
-            innerBackground={innerBackground}
-          >
-            {children}
-          </ContentWrapper>
+        <div className="flex flex-1 grow justify-center">
+          <ContentWrapper className={className}>{children}</ContentWrapper>
         </div>
         <Footer />
       </div>

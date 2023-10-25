@@ -3,65 +3,12 @@ import type { ReactNode } from 'react';
 import Navbar from '~/components/layouts/navbar';
 import Footer from '~/components/layouts/footer';
 import { type FilteredUser } from '~/server/trpc/routers/users';
-import Image from 'next/image';
 import cn from 'classnames';
-import Link from 'next/link';
 import ReactSlidingPane from 'react-sliding-pane';
 import 'react-sliding-pane/dist/react-sliding-pane.css';
 import { SidebarContext } from '~/contexts/sidebar-context';
 import { useContext } from 'react';
-import { FollowUserButton } from '../profile/profile-layout';
-
-const FollowCard = ({ user }: { user: FilteredUser }) => {
-  return (
-    <section className="flex flex-col border-b border-b-gray-300 px-4 py-2 hover:bg-gray-100/80">
-      <Link
-        href={`/user/${user.id}`}
-        className="flex items-center justify-between"
-      >
-        <div className="flex items-center">
-          <Image
-            className="rounded-full"
-            src={user.imageUrl}
-            alt="Profile Image"
-            width={40}
-            height={40}
-          />
-          <h4 className="flex justify-center p-4 font-bold">
-            {user?.displayName ?? user.firstName}
-          </h4>
-        </div>
-        <FollowUserButton
-          className="!rounded-full"
-          useIcons={true}
-          user={user}
-        />
-      </Link>
-    </section>
-  );
-};
-
-const FeedSidebar = ({
-  followingUsers,
-  className
-}: {
-  followingUsers: FilteredUser[];
-  className?: string;
-}) => {
-  return (
-    <div
-      className={cn(
-        'shrink-0 border-r border-r-gray-300 bg-white px-4 py-4',
-        className
-      )}
-    >
-      <h1 className="mb-2 flex justify-center text-2xl font-bold">Following</h1>
-      {followingUsers.map((user) => (
-        <FollowCard key={user.id} user={user} />
-      ))}
-    </div>
-  );
-};
+import FollowingSidebar from './following-sidebar';
 
 export default function FeedLayout({
   children,
@@ -88,13 +35,13 @@ export default function FeedLayout({
           <ReactSlidingPane
             isOpen={isOpen}
             from="left"
-            width="350px"
+            width="300px"
             onRequestClose={() => setIsOpen(false)}
           >
-            <FeedSidebar followingUsers={followingUsers} />
+            <FollowingSidebar followingUsers={followingUsers} />
           </ReactSlidingPane>
-          <FeedSidebar
-            className="hidden w-[350px] lg:block"
+          <FollowingSidebar
+            className="hidden w-[300px] border-r border-r-gray-300 lg:block "
             followingUsers={followingUsers}
           />
           <div

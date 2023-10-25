@@ -13,13 +13,16 @@ import { type FilteredUser } from '~/server/trpc/routers/users';
 
 const ExploreContent = ({ feedContents }: { feedContents: FeedContent[] }) => {
   return (
-    <div className="flex flex-col gap-8">
+    <div>
       {feedContents != null && feedContents.length === 0 && (
         <span className="mt-[-1rem] italic">
           Uh oh! There are no public users with posts.
         </span>
       )}
-      <FeedContentView feedContents={feedContents} />
+      <FeedContentView
+        className="flex flex-col gap-8"
+        feedContents={feedContents}
+      />
     </div>
   );
 };
