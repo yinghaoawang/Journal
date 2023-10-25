@@ -58,8 +58,20 @@ export const FollowUserButton = ({
   const { user: authUser, isLoaded: isAuthUserLoaded } = useUser();
   const isCurrentUser = authUser?.id == user.id;
   const utils = trpc.useContext();
-  const followText = useIcons ? <FaUserPlus /> : 'Follow';
-  const unfollowText = useIcons ? <FaUserMinus /> : 'Unfollow';
+  const followText = useIcons ? (
+    <span className="relative left-[1px]">
+      <FaUserPlus />
+    </span>
+  ) : (
+    'Follow'
+  );
+  const unfollowText = useIcons ? (
+    <span className="relative left-[1px]">
+      <FaUserMinus />
+    </span>
+  ) : (
+    'Unfollow'
+  );
   const { mutate: followUser, isLoading: isFollowLoading } =
     trpc.follows.followUser.useMutation({
       onSuccess: () => {
@@ -107,7 +119,8 @@ export const FollowUserButton = ({
 
   return (
     <button
-      onClick={() => {
+      onClick={(event) => {
+        event.preventDefault();
         if (authUser == null) {
           alert('You must be signed in to follow.');
         } else {
@@ -121,7 +134,7 @@ export const FollowUserButton = ({
       disabled={isCurrentUser || isLoading}
       className={cn(
         'button flex items-center justify-center rounded-md font-semibold',
-        useIcons ? 'h-12 w-12 !p-0' : 'h-12 w-40 px-5 py-2',
+        useIcons ? 'h-8 w-8 !p-0' : 'h-12 w-40 px-5 py-2',
         isFollowing && '!bg-red-500 !text-gray-100 hover:!bg-red-500/90',
         className
       )}
@@ -248,12 +261,12 @@ const ProfileSidebar = ({
       )}
     >
       <UserDetails user={user} />
-      <section className="mt-4 flex border-b border-b-gray-300 py-3">
+      <section className="mt-4 flex justify-center border-b border-b-gray-300 py-3">
         <Link href={`/user/${user.id}/journal/all`} className="text-blue-500">
           all posts
         </Link>
       </section>
-      <section className="flex border-b border-b-gray-300 py-3">
+      <section className="flex justify-center border-b border-b-gray-300 py-3">
         <Link href={`/user/${user.id}/journal/`} className="text-blue-500">
           single post
         </Link>

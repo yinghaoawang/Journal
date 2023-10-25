@@ -14,22 +14,29 @@ import { FollowUserButton } from '../profile/profile-layout';
 
 const FollowCard = ({ user }: { user: FilteredUser }) => {
   return (
-    <section className="mt-4 flex flex-col border-b border-b-gray-300 py-3">
-      <div className="flex items-center justify-between">
-        <Link href={`/user/${user.id}`} className="flex items-center">
+    <section className="flex flex-col border-b border-b-gray-300 px-4 py-2 hover:bg-gray-100/80">
+      <Link
+        href={`/user/${user.id}`}
+        className="flex items-center justify-between"
+      >
+        <div className="flex items-center">
           <Image
             className="rounded-full"
             src={user.imageUrl}
             alt="Profile Image"
-            width={50}
-            height={50}
+            width={40}
+            height={40}
           />
-          <h4 className="flex justify-center p-4 text-lg font-bold">
+          <h4 className="flex justify-center p-4 font-bold">
             {user?.displayName ?? user.firstName}
           </h4>
-        </Link>
-        <FollowUserButton useIcons={true} user={user} />
-      </div>
+        </div>
+        <FollowUserButton
+          className="!rounded-full"
+          useIcons={true}
+          user={user}
+        />
+      </Link>
     </section>
   );
 };
@@ -44,11 +51,11 @@ const FeedSidebar = ({
   return (
     <div
       className={cn(
-        'shrink-0 border-r border-r-gray-300 bg-white px-8 py-4',
+        'shrink-0 border-r border-r-gray-300 bg-white px-4 py-4',
         className
       )}
     >
-      <h1 className="flex justify-center text-2xl font-bold">Following</h1>
+      <h1 className="mb-2 flex justify-center text-2xl font-bold">Following</h1>
       {followingUsers.map((user) => (
         <FollowCard key={user.id} user={user} />
       ))}
