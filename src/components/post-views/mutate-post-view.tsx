@@ -8,6 +8,8 @@ import { useRouter } from 'next/router';
 import { trpc } from '~/utils/trpc';
 import { LoadingSpinner } from '../loading';
 import cn from 'classnames';
+import { MDXEditor } from '../mdx/mdx-editor';
+import { ALL_PLUGINS } from '../mdx/_boilerplate';
 
 export const DRAFT_SAVE_INTERVAL = 5000;
 
@@ -133,17 +135,25 @@ const MutatePostView = ({
           </h2>
         </div>
 
-        <div className="journal mb-3 mt-5">
-          <h2>
+        <div className="mb-3 mt-5">
+          {/* <h2>
             {dayjs(post?.createdAt ?? Date.now()).format('MMMM DD, YYYY')}
-          </h2>
-          <p>Dear Journal,</p>
-          <AutoResizingTextArea
+          </h2> */}
+          <div>
+            <MDXEditor
+              contentEditableClassName="prose"
+              onChange={(md) => console.log(md)}
+              markdown={'#HEY'}
+              plugins={ALL_PLUGINS}
+            />
+          </div>
+
+          {/* <AutoResizingTextArea
             className="journal-lines w-full resize-none !p-0"
             input={textInput}
             setInput={setTextInput}
             disabled={isLoading}
-          />
+          /> */}
         </div>
       </div>
       <div className="flex justify-between">

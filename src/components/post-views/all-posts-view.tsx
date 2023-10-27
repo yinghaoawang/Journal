@@ -94,7 +94,7 @@ export default function AllPostsView({
           key={post.id}
         >
           {isCurrentUser && <UserActionLinks post={post} />}
-          <div className="journal">
+          <div className="prose">
             <h2>{dayjs(post.createdAt).format('MMMM DD, YYYY')}</h2>
             <p>Dear Journal,</p>
             <p>{post.content}</p>

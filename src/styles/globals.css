@@ -19,7 +19,11 @@ body {
   @apply min-h-[calc(100vh-var(--navbar-height)-var(--footer-height))];
 }
 
-.journal {
+.prose {
+  @apply max-w-max !whitespace-pre-wrap;
+}
+
+/* .journal {
   @apply journal-lines whitespace-pre-wrap;
 }
 
@@ -39,8 +43,7 @@ body {
       calc(var(--j-line-height) - var(--j-line-offset) + var(--j-line-size))
       var(--j-line-height)
   );
-  /* 50% 0 / calc(100% - var(--j-line-height) * 2) 100% no-repeat; */
-}
+} */
 
 .landing-sign-in-button-container > button {
   @apply w-[200px] items-stretch justify-stretch rounded-3xl bg-green-500 px-5 py-3 font-semibold text-gray-100;

@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 import { type Config } from 'tailwindcss';
 
 export default {
@@ -21,5 +22,5 @@ export default {
       }
     }
   },
-  plugins: []
+  plugins: [require('@tailwindcss/typography')]
 } satisfies Config;

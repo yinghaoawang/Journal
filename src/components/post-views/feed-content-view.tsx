@@ -41,7 +41,7 @@ export default function FeedContentView({
             </span>
           </div>
           <div className="max-h-[400px] overflow-auto">
-            <div className="journal">
+            <div className="prose">
               <h2>{dayjs(post.createdAt).format('MMMM DD, YYYY')}</h2>
               <p>Dear Journal,</p>
               <p>{post.content}</p>
