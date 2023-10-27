@@ -1,12 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import type { Draft, Post } from '@prisma/client';
 import toast from 'react-hot-toast';
 import AutoResizingTextArea from '~/components/resizing-text-area';
 import dayjs from '~/utils/dayjs';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { trpc } from '~/utils/trpc';
 import { LoadingSpinner } from '../loading';
 import cn from 'classnames';
+
+export const DRAFT_SAVE_INTERVAL = 5000;
 
 const MutatePostView = ({
   type,
@@ -24,6 +27,7 @@ const MutatePostView = ({
   const [textInput, setTextInput] = useState(defaultTextInput);
   const [prevUserDraft, setPrevUserDraft] = useState('');
   const [draftLastSaved, setDraftLastSaved] = useState(Date.now());
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { mutate: upsertDraft, isLoading: isUpsertingDraft } =
     trpc.profile.upsertDraft.useMutation({
       onSuccess: () => {
@@ -41,11 +45,45 @@ const MutatePostView = ({
     });
 
   useEffect(() => {
+    if (type != 'update') return;
+    if (unsavedChanges == false) return;
+    console.log('creating event listener');
+    const warningMessage =
+      'You have unsubmitted changes. Are you sure you want to leave?';
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (!unsavedChanges) return;
+      e.preventDefault();
+      e.returnValue = warningMessage;
+    };
+    const handleRouteChange = () => {
+      if (unsavedChanges) {
+        const confirmExit = window.confirm(warningMessage);
+        if (!confirmExit) {
+          router.events.emit('routeChangeError');
+        }
+      }
+    };
+
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [unsavedChanges]);
+
+  useEffect(() => {
+    if (unsavedChanges) return;
+    if (textInput != defaultTextInput) setUnsavedChanges(true);
+  }, [textInput]);
+
+  useEffect(() => {
     if (type == 'update') return;
     if (
       isUpsertingDraft ||
       prevUserDraft == textInput ||
-      Date.now() < draftLastSaved + 5000
+      Date.now() < draftLastSaved + DRAFT_SAVE_INTERVAL
     )
       return;
     upsertDraft({ content: textInput });
@@ -56,7 +94,7 @@ const MutatePostView = ({
     toast.success(
       `Post ${type === 'create' ? 'created' : 'edited'} successfully!`
     );
-    router.push('/journal');
+    void router.push('/journal');
     void utils.posts.invalidate();
   };
   const onUpsertError = (errorMessage?: string) => {
