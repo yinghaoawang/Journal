@@ -127,24 +127,30 @@ const MutatePostView = ({
           {!isLoading &&
             (type === 'create' ? 'Create New Post' : 'Update Post')}
         </button>
-        <div className="flex items-start gap-4">
-          {isUpsertingDraft && <span className="text-gray-600">Saving...</span>}
-          {!isUpsertingDraft && (
-            <span className="text-gray-600">
-              <span className="mr-1">Draft last saved</span>
-              <span className="font-light">
-                {dayjs(draftLastSaved).format('h:mm:ssA')}
+        {type === 'create' && (
+          <div className="flex items-start gap-4">
+            {isUpsertingDraft && (
+              <span className="text-gray-600">Saving...</span>
+            )}
+            {!isUpsertingDraft && (
+              <span className="text-gray-600">
+                <span className="mr-1">Draft last saved</span>
+                <span className="font-light">
+                  {dayjs(draftLastSaved).format('h:mm:ssA')}
+                </span>
               </span>
-            </span>
-          )}
-          <button
-            className={cn(isUpsertingDraft ? 'text-gray-400' : 'text-blue-500')}
-            disabled={isUpsertingDraft}
-            onClick={() => upsertDraft({ content: textInput })}
-          >
-            save
-          </button>
-        </div>
+            )}
+            <button
+              className={cn(
+                isUpsertingDraft ? 'text-gray-400' : 'text-blue-500'
+              )}
+              disabled={isUpsertingDraft}
+              onClick={() => upsertDraft({ content: textInput })}
+            >
+              save
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
