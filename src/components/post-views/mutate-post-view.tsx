@@ -11,6 +11,9 @@ import { MDXEditor } from '../mdx/mdx-editor';
 import { ALL_PLUGINS } from '../mdx/_boilerplate';
 
 export const DRAFT_SAVE_INTERVAL = 5000;
+const stateData = {
+  successUpsertedPost: false
+};
 
 const MutatePostView = ({
   type,
@@ -23,6 +26,7 @@ const MutatePostView = ({
 }) => {
   const router = useRouter();
   const utils = trpc.useContext();
+
   let defaultTextInput = post?.content ?? '';
   if (type === 'create') defaultTextInput = userDraft?.content ?? '';
   const [textInput, setTextInput] = useState(defaultTextInput);
@@ -46,24 +50,23 @@ const MutatePostView = ({
     });
 
   useEffect(() => {
-    if (type != 'update') return;
-    if (unsavedChanges == false) return;
-    console.log('creating event listener');
     const warningMessage =
       'You have unsubmitted changes. Are you sure you want to leave?';
     const handleWindowClose = (e: BeforeUnloadEvent) => {
-      if (!unsavedChanges) return;
+      if (!unsavedChanges || stateData.successUpsertedPost) return;
       e.preventDefault();
       e.returnValue = warningMessage;
     };
     const handleRouteChange = () => {
-      if (unsavedChanges) {
-        const confirmExit = window.confirm(warningMessage);
-        if (!confirmExit) {
-          router.events.emit('routeChangeError');
-        }
+      if (!unsavedChanges || stateData.successUpsertedPost) return;
+      const confirmExit = window.confirm(warningMessage);
+      if (!confirmExit) {
+        router.events.emit('routeChangeError');
       }
     };
+
+    if (type != 'update') return;
+    if (unsavedChanges == false) return;
 
     window.addEventListener('beforeunload', handleWindowClose);
     router.events.on('routeChangeStart', handleRouteChange);
@@ -95,6 +98,7 @@ const MutatePostView = ({
     toast.success(
       `Post ${type === 'create' ? 'created' : 'edited'} successfully!`
     );
+    stateData.successUpsertedPost = true;
     void router.push('/journal');
     void utils.posts.invalidate();
   };
