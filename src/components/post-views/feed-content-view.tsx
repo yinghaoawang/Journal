@@ -3,6 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { type FeedContent } from '~/server/trpc/routers/feed';
 import dayjs from '~/utils/dayjs';
+import { MDXEditor } from '../mdx/mdx-editor';
+import { READONLY_PLUGINS } from '../mdx/_boilerplate';
 
 export default function FeedContentView({
   feedContents,
@@ -41,11 +43,13 @@ export default function FeedContentView({
             </span>
           </div>
           <div className="max-h-[400px] overflow-auto">
-            <div className="prose">
-              <h2>{dayjs(post.createdAt).format('MMMM DD, YYYY')}</h2>
-              <p>Dear Journal,</p>
-              <p>{post.content}</p>
-            </div>
+            <MDXEditor
+              contentEditableClassName="prose"
+              markdown={post.content}
+              autoFocus={true}
+              readOnly={true}
+              plugins={READONLY_PLUGINS}
+            />
           </div>
         </div>
       ))}

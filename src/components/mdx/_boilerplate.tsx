@@ -34,22 +34,7 @@ export async function expressImageUploadHandler(image: File) {
   return json.url;
 }
 
-export const ALL_PLUGINS = [
-  toolbarPlugin({
-    toolbarContents: () => (
-      <>
-        <UndoRedo />
-        <BlockTypeSelect />
-        <BoldItalicUnderlineToggles />
-        <CodeToggle />
-        <InsertCodeBlock />
-        <CreateLink />
-        <InsertImage />
-        <InsertTable />
-        <ListsToggle />
-      </>
-    )
-  }),
+export const READONLY_PLUGINS = [
   listsPlugin(),
   quotePlugin(),
   headingsPlugin({ allowedHeadingLevels: [1, 2, 3, 4, 5, 6] }),
@@ -68,4 +53,23 @@ export const ALL_PLUGINS = [
     }
   }),
   markdownShortcutPlugin()
+];
+
+export const ALL_PLUGINS = [
+  ...READONLY_PLUGINS,
+  toolbarPlugin({
+    toolbarContents: () => (
+      <>
+        <UndoRedo />
+        <BlockTypeSelect />
+        <BoldItalicUnderlineToggles />
+        <CodeToggle />
+        <InsertCodeBlock />
+        <CreateLink />
+        <InsertImage />
+        <InsertTable />
+        <ListsToggle />
+      </>
+    )
+  })
 ];

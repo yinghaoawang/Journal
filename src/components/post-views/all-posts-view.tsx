@@ -7,6 +7,8 @@ import { trpc } from '~/utils/trpc';
 import cn from 'classnames';
 import { type FilteredUser } from '~/server/trpc/routers/users';
 import { UserIsPrivateText } from '../utils';
+import { READONLY_PLUGINS } from '../mdx/_boilerplate';
+import { MDXEditor } from '../mdx/mdx-editor';
 
 export default function AllPostsView({
   user,
@@ -94,11 +96,14 @@ export default function AllPostsView({
           key={post.id}
         >
           {isCurrentUser && <UserActionLinks post={post} />}
-          <div className="prose">
-            <h2>{dayjs(post.createdAt).format('MMMM DD, YYYY')}</h2>
-            <p>Dear Journal,</p>
-            <p>{post.content}</p>
-          </div>
+
+          <MDXEditor
+            contentEditableClassName="prose"
+            markdown={post.content}
+            autoFocus={true}
+            readOnly={true}
+            plugins={READONLY_PLUGINS}
+          />
         </div>
       ))}
     </>

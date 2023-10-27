@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import type { Draft, Post } from '@prisma/client';
 import toast from 'react-hot-toast';
-import AutoResizingTextArea from '~/components/resizing-text-area';
 import dayjs from '~/utils/dayjs';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -142,18 +141,13 @@ const MutatePostView = ({
           <div>
             <MDXEditor
               contentEditableClassName="prose"
-              onChange={(md) => console.log(md)}
-              markdown={'#HEY'}
+              onChange={setTextInput}
+              markdown={textInput}
+              autoFocus={true}
+              readOnly={isLoading}
               plugins={ALL_PLUGINS}
             />
           </div>
-
-          {/* <AutoResizingTextArea
-            className="journal-lines w-full resize-none !p-0"
-            input={textInput}
-            setInput={setTextInput}
-            disabled={isLoading}
-          /> */}
         </div>
       </div>
       <div className="flex justify-between">

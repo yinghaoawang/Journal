@@ -5,10 +5,10 @@
 :root {
   --navbar-height: 60px;
   --footer-height: 60px;
-  --j-line-height: 42px;
+  /* --j-line-height: 42px;
   --j-line-offset: 9px;
   --j-line-size: 2px;
-  --j-line-color: lightgray;
+  --j-line-color: lightgray; */
 }
 
 body {

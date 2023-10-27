@@ -9,6 +9,8 @@ import cn from 'classnames';
 import { useEffect, useState } from 'react';
 import { type FilteredUser } from '~/server/trpc/routers/users';
 import { UserIsPrivateText } from '../utils';
+import { MDXEditor } from '../mdx/mdx-editor';
+import { READONLY_PLUGINS } from '../mdx/_boilerplate';
 
 const UserActionLinks = ({ post }: { post: Post }) => {
   const utils = trpc.useContext();
@@ -156,11 +158,13 @@ export default function PostCarouselView({
             </button>
           </div>
           {isCurrentUser && <UserActionLinks post={currentPost} />}
-          <div className="prose">
-            <h2>{dayjs(currentPost.createdAt).format('MMMM DD, YYYY')}</h2>
-            <p>Dear Journal,</p>
-            <p>{currentPost.content}</p>
-          </div>
+          <MDXEditor
+            contentEditableClassName="prose"
+            markdown={currentPost.content}
+            autoFocus={true}
+            readOnly={true}
+            plugins={READONLY_PLUGINS}
+          />
         </div>
       )}
     </>
