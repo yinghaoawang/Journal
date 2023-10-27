@@ -78,5 +78,42 @@ export const profileRouter = router({
           isPublic: input.isPublic
         }
       });
+    }),
+  getDraft: privateProcedure.query(async ({ ctx }) => {
+    const authUserId = ctx.userId;
+    if (authUserId == null) throw new Error('UserID is null');
+    const draft = await ctx.db.draft.findFirst({
+      where: {
+        userId: authUserId
+      }
+    });
+    return draft;
+  }),
+  upsertDraft: privateProcedure
+    .input(
+      z.object({
+        content: z.string().min(0).max(5000)
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const authUserId = ctx.userId;
+      if (authUserId == null) throw new Error('UserID is null');
+      const existingDraft = await ctx.db.draft.findFirst({
+        where: {
+          userId: authUserId
+        }
+      });
+      if (existingDraft) {
+        await ctx.db.draft.update({
+          where: { id: existingDraft.id },
+          data: {
+            content: input.content
+          }
+        });
+      } else {
+        await ctx.db.draft.create({
+          data: { content: input.content, userId: authUserId }
+        });
+      }
     })
 });
