@@ -11,10 +11,10 @@
     "start": "next start"
   },
   "dependencies": {
+    "@alan/editor": "github:yinghaoawang/mdx-editor#build",
     "@clerk/nextjs": "^4.24.0",
     "@mdx-js/loader": "^3.0.0",
     "@mdx-js/react": "^3.0.0",
-    "@mdxeditor/editor": "github:yinghaoawang/mdx-editor",
     "@next/mdx": "^14.0.0",
     "@planetscale/database": "^1.11.0",
     "@prisma/client": "^5.3.1",

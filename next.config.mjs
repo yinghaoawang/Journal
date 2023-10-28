@@ -9,7 +9,7 @@ const config = {
   eslint: {
     ignoreDuringBuilds: true
   },
-  transpilePackages: ['@mdxeditor/editor', 'react-diff-view'],
+  transpilePackages: ['@alan/editor', 'react-diff-view'],
 
   /**
    * If you are using `appDir` then you must comment the below `i18n` config out.

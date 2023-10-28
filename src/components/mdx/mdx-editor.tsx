@@ -1,8 +1,8 @@
 'use client';
-import '@mdxeditor/editor/style.css';
+import '@alan/editor/style.css';
 import dynamic from 'next/dynamic';
 
 export const MDXEditor = dynamic(
-  () => import('@mdxeditor/editor').then((mod) => mod.MDXEditor),
+  () => import('@alan/editor').then((mod) => mod.MDXEditor),
   { ssr: false }
 );

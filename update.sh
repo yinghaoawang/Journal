@@ -1,0 +1,1 @@
+npm remove @alan/editor && npm install -S git+https://github.com/yinghaoawang/mdx-editor#build
