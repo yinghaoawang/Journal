@@ -138,16 +138,15 @@ const MutatePostView = ({
           </h2>
         </div>
 
-        <div className="mb-3 mt-5">
+        <div className="mb-4 mt-5">
           {/* <h2>
             {dayjs(post?.createdAt ?? Date.now()).format('MMMM DD, YYYY')}
           </h2> */}
-          <div>
+          <div className="rounded-lg border border-gray-300">
             <MDXEditor
-              contentEditableClassName="prose"
+              contentEditableClassName="!min-h-[400px] prose"
               onChange={setTextInput}
               markdown={textInput}
-              autoFocus={true}
               readOnly={isLoading}
               plugins={ALL_PLUGINS}
             />

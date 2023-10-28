@@ -20,7 +20,11 @@ body {
 }
 
 .prose {
-  @apply max-w-max !whitespace-pre-wrap;
+  @apply max-w-none !whitespace-pre-wrap;
+}
+
+.prose img {
+  @apply my-0;
 }
 
 /* .journal {
