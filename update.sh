@@ -1,1 +1,1 @@
-npm remove @alan/editor && npm install -S git+https://github.com/yinghaoawang/mdx-editor#build
+npm remove @alan/editor && rm package-lock.json && npm install -S git+https://github.com/yinghaoawang/mdx-editor#build
