@@ -4,5 +4,5 @@ import dynamic from 'next/dynamic';
 
 export const MDXEditor = dynamic(
   () => import('@alan/editor').then((mod) => mod.MDXEditor),
-  { ssr: false }
+  { ssr: true }
 );

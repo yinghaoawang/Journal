@@ -101,6 +101,7 @@ export default function AllPostsView({
           </h2>
           <div className="rounded-lg border border-gray-300">
             <MDXEditor
+              key={post.id}
               contentEditableClassName="prose"
               markdown={post.content}
               autoFocus={true}

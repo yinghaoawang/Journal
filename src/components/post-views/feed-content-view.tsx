@@ -44,6 +44,7 @@ export default function FeedContentView({
           </div>
           <div className="max-h-[400px] overflow-auto">
             <MDXEditor
+              key={post.id}
               contentEditableClassName="prose"
               markdown={post.content}
               autoFocus={true}

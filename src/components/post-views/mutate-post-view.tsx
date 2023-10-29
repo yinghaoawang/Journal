@@ -144,6 +144,7 @@ const MutatePostView = ({
           </h2>
           <div className="rounded-lg border border-gray-300">
             <MDXEditor
+              key={post?.id}
               contentEditableClassName="!min-h-[400px] prose"
               onChange={setTextInput}
               markdown={textInput}
