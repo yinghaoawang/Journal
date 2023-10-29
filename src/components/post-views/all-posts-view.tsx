@@ -92,18 +92,22 @@ export default function AllPostsView({
       {isProfileHidden && <UserIsPrivateText className="mt-4" />}
       {posts.map((post, index) => (
         <div
-          className={cn('mt-10 flex flex-col pb-12', index < posts.length - 1)}
+          className={cn('mt-10 flex flex-col pb-8', index < posts.length - 1)}
           key={post.id}
         >
           {isCurrentUser && <UserActionLinks post={post} />}
-
-          <MDXEditor
-            contentEditableClassName="prose"
-            markdown={post.content}
-            autoFocus={true}
-            readOnly={true}
-            plugins={READONLY_PLUGINS}
-          />
+          <h2 className="mb-4 font-bold">
+            {dayjs(post?.createdAt ?? Date.now()).format('MMMM DD, YYYY')}
+          </h2>
+          <div className="rounded-lg border border-gray-300">
+            <MDXEditor
+              contentEditableClassName="prose"
+              markdown={post.content}
+              autoFocus={true}
+              readOnly={true}
+              plugins={READONLY_PLUGINS}
+            />
+          </div>
         </div>
       ))}
     </>

@@ -158,13 +158,20 @@ export default function PostCarouselView({
             </button>
           </div>
           {isCurrentUser && <UserActionLinks post={currentPost} />}
-          <MDXEditor
-            contentEditableClassName="prose"
-            markdown={currentPost.content}
-            autoFocus={true}
-            readOnly={true}
-            plugins={READONLY_PLUGINS}
-          />
+          <h2 className="mb-4 font-bold">
+            {dayjs(currentPost?.createdAt ?? Date.now()).format(
+              'MMMM DD, YYYY'
+            )}
+          </h2>
+          <div className="rounded-lg border border-gray-300">
+            <MDXEditor
+              contentEditableClassName="prose"
+              markdown={currentPost.content}
+              autoFocus={true}
+              readOnly={true}
+              plugins={READONLY_PLUGINS}
+            />
+          </div>
         </div>
       )}
     </>
