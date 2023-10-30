@@ -154,12 +154,16 @@ const MutatePostView = ({
                 const scrollToCurrentElement = () => {
                   const caretNode = window?.getSelection()?.focusNode;
                   if (caretNode) {
-                    const parent = caretNode?.parentElement;
-                    if (parent == null) return;
+                    let element = caretNode?.parentElement;
+
+                    if (element == null) return;
+                    if (caretNode.nodeType === Node.ELEMENT_NODE) {
+                      element = caretNode as HTMLElement;
+                    }
                     const offsetY = -50;
                     const y =
-                      parent.getBoundingClientRect().top +
-                      window?.pageYOffset +
+                      element.getBoundingClientRect().top +
+                      window?.scrollY +
                       offsetY;
 
                     window.scrollTo({ top: y, behavior: 'smooth' });
