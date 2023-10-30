@@ -30,7 +30,7 @@ export default function Navbar({
     (user?.publicMetadata?.displayName as string) ?? user?.firstName;
   return (
     <div className={cn('flex justify-center', className)}>
-      <div className="fixed flex h-[var(--navbar-height)] w-full max-w-[1200px] items-center justify-between bg-white text-gray-600 lg:relative">
+      <div className="fixed -z-[-50] flex h-[var(--navbar-height)] w-full max-w-[1200px] items-center justify-between bg-white text-gray-600 lg:relative">
         <div>
           <div
             className={cn(
