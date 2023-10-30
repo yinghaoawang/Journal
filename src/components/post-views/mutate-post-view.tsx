@@ -43,9 +43,13 @@ const MutatePostView = ({
       onError: (error) => {
         const errors = error.data?.zodError?.fieldErrors;
         const errorMessage = errors?.[Object.keys(errors)?.[0] ?? '']?.[0];
-        toast.error(`Failed to save draft.`);
-        console.error(error);
-        console.error(errorMessage);
+        if (errorMessage) {
+          toast.error(` Failed to save draft: ${errorMessage}`);
+        } else {
+          toast.error(`Failed to save draft.`);
+          console.error(error);
+          console.error(errorMessage);
+        }
       }
     });
 
@@ -146,8 +150,27 @@ const MutatePostView = ({
             <MDXEditor
               key={post?.id}
               contentEditableClassName="!min-h-[400px] prose"
-              onChange={setTextInput}
+              onChange={(markdown) => {
+                const scrollToCurrentElement = () => {
+                  const caretNode = window?.getSelection()?.focusNode;
+                  if (caretNode) {
+                    const parent = caretNode?.parentElement;
+                    if (parent == null) return;
+                    const offsetY = -50;
+                    const y =
+                      parent.getBoundingClientRect().top +
+                      window?.pageYOffset +
+                      offsetY;
+
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                  }
+                };
+
+                setTextInput(markdown);
+                scrollToCurrentElement();
+              }}
               markdown={textInput}
+              autoFocus={true}
               readOnly={isLoading}
               plugins={ALL_PLUGINS}
             />
