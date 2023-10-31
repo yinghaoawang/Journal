@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { router, privateProcedure, publicProcedure } from '~/server/trpc/trpc';
-import { filterUserForClient } from './users';
+import { filterHiddenUserForClient, filterUserForClient } from './users';
 
 export const followsRouter = router({
   getAuthFollowingUsers: privateProcedure.query(async ({ ctx }) => {
@@ -18,7 +18,18 @@ export const followsRouter = router({
     const users = (await clerkClient.users.getUserList()).filter((u) =>
       follows.includes(u.id)
     );
-    return users.map(filterUserForClient);
+    return Promise.all(
+      users.map(async (user) => {
+        const isFollowingBack = await ctx.db.follow.findFirst({
+          where: {
+            followerId: user.id,
+            followingId: authUserId
+          }
+        });
+        if (isFollowingBack) return filterUserForClient(user);
+        return filterHiddenUserForClient(user);
+      })
+    );
   }),
   getAuthFollowerUsers: privateProcedure.query(async ({ ctx }) => {
     const authUserId = ctx.userId;

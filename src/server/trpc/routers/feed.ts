@@ -1,7 +1,11 @@
 import { type Post } from '@prisma/client';
 import { privateProcedure, publicProcedure, router } from '../trpc';
 import { clerkClient } from '@clerk/nextjs';
-import { type FilteredUser, filterUserForClient } from './users';
+import {
+  type FilteredUser,
+  filterUserForClient,
+  filterHiddenUserForClient
+} from './users';
 
 export type FeedContent = {
   user: FilteredUser;
@@ -44,19 +48,46 @@ export const feedRouter = router({
       })
     ).map((follow) => follow.followingId);
 
+    const usersFollowingBack: string[] = [];
+
+    const validFollowingIds: string[] = (
+      await Promise.all(
+        followingIds.map(async (id) => {
+          const user = await clerkClient.users.getUser(id);
+          if (user?.publicMetadata?.isPublic) return id;
+
+          const isFollowingBack =
+            (await ctx.db.follow.findFirst({
+              where: {
+                followerId: id,
+                followingId: authUserId
+              }
+            })) != null;
+
+          if (isFollowingBack) {
+            usersFollowingBack.push(id);
+            return id;
+          }
+          return null;
+        })
+      )
+    ).filter((id) => id !== null) as string[];
+
     const feedContent: FeedContent[] = [];
 
-    for (const followingId of followingIds) {
+    for (const followingId of validFollowingIds) {
       const latestPost = await ctx.db.post.findFirst({
         where: { userId: followingId, deleted: false },
         orderBy: { updatedAt: 'desc' }
       });
 
       if (latestPost) {
+        const rawUser = await clerkClient.users.getUser(followingId);
+        const user = usersFollowingBack.includes(followingId)
+          ? filterUserForClient(rawUser)
+          : filterHiddenUserForClient(rawUser);
         feedContent.push({
-          user: filterUserForClient(
-            await clerkClient.users.getUser(followingId)
-          ),
+          user,
           post: latestPost
         });
       }

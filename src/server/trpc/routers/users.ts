@@ -5,26 +5,15 @@ import { z } from 'zod';
 import { router, publicProcedure, privateProcedure } from '~/server/trpc/trpc';
 import { isUserTrustAuth } from './profile';
 
+/**
+ * This type is not used outside of this class, it's just to show what fields we fetch from Clerk
+ */
 type FilteredHiddenUser = {
   id: string;
   createdAt: number;
   firstName: string | null;
   isPublic: boolean;
   displayName: string | null;
-};
-
-/**
- * Filters a user to only include public information
- */
-export const filterHiddenUserForClient = (user: User): FilteredHiddenUser => {
-  const { id, publicMetadata, createdAt, firstName } = user;
-  return {
-    id,
-    createdAt,
-    firstName,
-    isPublic: publicMetadata?.isPublic ? true : false,
-    displayName: publicMetadata?.displayName as string | null
-  };
 };
 
 export type FilteredUser = {
@@ -36,6 +25,27 @@ export type FilteredUser = {
   isPublic: boolean;
   displayName: string | null;
   description: string | null;
+};
+
+/**
+ * Filters a user to only include public information
+ */
+export const filterHiddenUserForClient = (user: User): FilteredUser => {
+  const { id, publicMetadata, createdAt, firstName } = user;
+  const hiddenUser: FilteredHiddenUser = {
+    id,
+    createdAt,
+    firstName,
+    isPublic: publicMetadata?.isPublic ? true : false,
+    displayName: publicMetadata?.displayName as string | null
+  };
+
+  return {
+    ...hiddenUser,
+    imageUrl: null,
+    lastName: null,
+    description: null
+  };
 };
 
 export const filterUserForClient = (user: User): FilteredUser => {
@@ -81,13 +91,6 @@ export const usersRouter = router({
     .input(z.object({ userId: z.string() }))
     .query(async ({ input }) => {
       const user = await clerkClient.users.getUser(input.userId);
-      const hiddenUser = filterHiddenUserForClient(user);
-      const convertedUser: FilteredUser = {
-        ...hiddenUser,
-        imageUrl: null,
-        lastName: null,
-        description: null
-      };
-      return convertedUser;
+      return filterHiddenUserForClient(user);
     })
 });

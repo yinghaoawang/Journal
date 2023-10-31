@@ -17,7 +17,7 @@ const FeedContent = ({ feedContents }: { feedContents: FeedContent[] }) => {
     <div>
       {feedContents != null && feedContents.length === 0 && (
         <span className="mt-[-1rem] italic">
-          You aren&apos;t following anybody, visit the&nbsp;
+          You aren&apos;t following anybody public, visit the&nbsp;
           <Link className="text-blue-500" href={'/explore'}>
             explore page
           </Link>
@@ -68,7 +68,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     transformer: superjson
   });
 
-  const authUser = await helpers.users.getDetailedUserById.fetch({ userId: authUserId });
+  const authUser = await helpers.users.getDetailedUserById.fetch({
+    userId: authUserId
+  });
 
   const followingUsers = await helpers.follows.getAuthFollowingUsers.fetch();
 
