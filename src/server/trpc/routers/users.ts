@@ -72,7 +72,7 @@ export const usersRouter = router({
   /**
    * Gets a user by their ID. If the user is not public, then an error is thrown
    */
-  getDetailedUserById: privateProcedure
+  getDetailedUserById: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const authUserId = ctx.userId;
@@ -80,7 +80,11 @@ export const usersRouter = router({
         ? await clerkClient.users.getUser(authUserId)
         : null;
       const user = await clerkClient.users.getUser(input.userId);
-      if (!(await isUserTrustAuth(authUser, user, ctx.db))) return null;
+      if (
+        !user?.publicMetadata?.isPublic &&
+        !(await isUserTrustAuth(authUser, user, ctx.db))
+      )
+        return null;
       return filterUserForClient(user);
     }),
 
