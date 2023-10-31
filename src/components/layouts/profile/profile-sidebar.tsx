@@ -16,7 +16,7 @@ const UserDetails = ({ user }: { user: FilteredUser }) => {
         <div className="flex justify-center">
           <Image
             className="rounded-full"
-            src={user.imageUrl}
+            src={user?.imageUrl ?? '/default-avatar.png'}
             alt="Profile Image"
             width={120}
             height={120}
@@ -25,7 +25,7 @@ const UserDetails = ({ user }: { user: FilteredUser }) => {
       </div>
       <div className="flex flex-col gap-2">
         <h1 className="flex justify-center text-2xl font-bold">
-          {user?.displayName ?? user.firstName}
+          {user?.displayName ?? user?.firstName}
         </h1>
         <div className="flex flex-col items-center">
           <UserDescription user={user} />
@@ -145,19 +145,31 @@ export default function ProfileSidebar({
   user: FilteredUser;
   className?: string;
 }) {
+  const { data: isProfileHidden, isLoading } =
+    trpc.profile.isUserHiddenToAuth.useQuery({
+      userId: user.id
+    });
+  if (isLoading) return <LoadingSpinner />;
   return (
     <div className={cn('shrink-0 px-8 py-4', className)}>
       <UserDetails user={user} />
-      <section className="mt-4 flex justify-center border-b border-b-gray-300 py-3">
-        <Link href={`/user/${user.id}/journal/all`} className="text-blue-500">
-          all posts
-        </Link>
-      </section>
-      <section className="flex justify-center border-b border-b-gray-300 py-3">
-        <Link href={`/user/${user.id}/journal/`} className="text-blue-500">
-          single post
-        </Link>
-      </section>
+      {!isProfileHidden && (
+        <>
+          <section className="mt-4 flex justify-center border-b border-b-gray-300 py-3">
+            <Link
+              href={`/user/${user.id}/journal/all`}
+              className="text-blue-500"
+            >
+              all posts
+            </Link>
+          </section>
+          <section className="flex justify-center border-b border-b-gray-300 py-3">
+            <Link href={`/user/${user.id}/journal/`} className="text-blue-500">
+              single post
+            </Link>
+          </section>
+        </>
+      )}
     </div>
   );
 }

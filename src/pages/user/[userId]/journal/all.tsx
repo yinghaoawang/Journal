@@ -46,7 +46,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   const isProfileHidden = await helpers.profile.isUserHiddenToAuth.fetch({
     userId
   });
-  const user = await helpers.users.getById.fetch({ userId });
+  const user = await helpers.users.getDetailedUserById.fetch({ userId });
   const posts = !isProfileHidden
     ? await helpers.posts.getByUserId.fetch({
         userId,

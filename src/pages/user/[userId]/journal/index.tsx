@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import PostCarouselView from '~/components/post-views/post-carousel-view';
 
 const JournalPageContent = ({ userId }: { userId: string }) => {
-  const { data: user, isLoading } = trpc.users.getById.useQuery({
+  const { data: user, isLoading } = trpc.users.getDetailedUserById.useQuery({
     userId
   });
 

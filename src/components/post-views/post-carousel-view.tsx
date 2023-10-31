@@ -133,32 +133,35 @@ export default function PostCarouselView({
       )}
       {currentPost && (
         <div className="my-5 flex flex-col">
-          <div className="flex gap-3">
-            <button
-              className={cn(
-                currentPostIndex - 1 < 0 ? 'text-blue-200' : 'text-blue-500'
-              )}
-              disabled={currentPostIndex - 1 < 0}
-              onClick={() => setCurrentPostIndex(currentPostIndex - 1)}
-            >
-              prev
-            </button>
-            <button
-              className={cn(
-                posts != null && currentPostIndex + 1 > posts.length - 1
-                  ? 'text-blue-200'
-                  : 'text-blue-500'
-              )}
-              disabled={
-                posts != null && currentPostIndex + 1 > posts.length - 1
-              }
-              onClick={() => setCurrentPostIndex(currentPostIndex + 1)}
-            >
-              next
-            </button>
+          <div className="flex justify-between">
+            <div className="flex gap-3">
+              <button
+                className={cn(
+                  currentPostIndex - 1 < 0 ? 'text-blue-200' : 'text-blue-500'
+                )}
+                disabled={currentPostIndex - 1 < 0}
+                onClick={() => setCurrentPostIndex(currentPostIndex - 1)}
+              >
+                prev
+              </button>
+              <button
+                className={cn(
+                  posts != null && currentPostIndex + 1 > posts.length - 1
+                    ? 'text-blue-200'
+                    : 'text-blue-500'
+                )}
+                disabled={
+                  posts != null && currentPostIndex + 1 > posts.length - 1
+                }
+                onClick={() => setCurrentPostIndex(currentPostIndex + 1)}
+              >
+                next
+              </button>
+            </div>
+            {isCurrentUser && <UserActionLinks post={currentPost} />}
           </div>
-          {isCurrentUser && <UserActionLinks post={currentPost} />}
-          <h2 className="mb-4 font-bold">
+
+          <h2 className="my-4 font-bold">
             {dayjs(currentPost?.createdAt ?? Date.now()).format(
               'MMMM DD, YYYY'
             )}

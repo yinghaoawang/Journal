@@ -33,7 +33,14 @@ export const getServerSideProps: GetServerSideProps = async ({
   const userId = params?.userId;
   if (typeof userId !== 'string') throw new Error('No userId in search params');
 
-  const user = await helpers.users.getById.fetch({ userId });
+  let user;
+  if (authUserId != null) {
+    user = await helpers.users.getDetailedUserById.fetch({ userId });
+  }
+
+  if (user == null) {
+    user = await helpers.users.getHiddenUserById.fetch({ userId });
+  }
 
   return {
     props: {

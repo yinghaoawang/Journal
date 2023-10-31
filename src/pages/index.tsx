@@ -44,7 +44,9 @@ export const getServerSideProps = async ({ req }: { req: NextRequest }) => {
     transformer: superjson
   });
   const user =
-    userId != null ? await helpers.users.getById.fetch({ userId }) : null;
+    userId != null
+      ? await helpers.users.getDetailedUserById.fetch({ userId })
+      : null;
 
   return {
     props: {

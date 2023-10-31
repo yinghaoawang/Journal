@@ -25,7 +25,7 @@ export default function FeedContentView({
                   alt={`${user?.displayName ?? user.firstName}'s pfp`}
                   height={40}
                   width={40}
-                  src={user.imageUrl}
+                  src={user?.imageUrl ?? '/default-avatar.png'}
                 />
               </Link>
               <Link href={`/user/${user.id}`}>

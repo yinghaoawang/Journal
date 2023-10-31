@@ -91,7 +91,7 @@ export default function FollowUserButton({
           }
         }
       }}
-      disabled={isCurrentUser || isLoading}
+      disabled={!authUser || isCurrentUser || isLoading}
       className={cn(
         'button flex items-center justify-center rounded-md font-semibold',
         useIcons ? 'h-8 w-8 !p-0' : 'h-12 w-40 px-5 py-2',
@@ -99,9 +99,10 @@ export default function FollowUserButton({
         className
       )}
     >
-      {isLoading && <LoadingSpinner size={15} />}
-      {!isLoading && !isFollowing && followText}
-      {!isLoading && isFollowing && unfollowText}
+      {!authUser && 'Follow'}
+      {authUser && isLoading && <LoadingSpinner size={15} />}
+      {authUser && !isLoading && !isFollowing && followText}
+      {authUser && !isLoading && isFollowing && unfollowText}
     </button>
   );
 }

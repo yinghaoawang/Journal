@@ -14,7 +14,7 @@ const FollowCard = ({ user }: { user: FilteredUser }) => {
         <div className="flex items-center">
           <Image
             className="rounded-full"
-            src={user.imageUrl}
+            src={user?.imageUrl ?? '/default-avatar.png'}
             alt="Profile Image"
             width={40}
             height={40}

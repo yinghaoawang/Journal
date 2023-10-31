@@ -63,7 +63,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     transformer: superjson
   });
 
-  const authUser = await helpers.users.getById.fetch({ userId: authUserId });
+  const authUser = await helpers.users.getDetailedUserById.fetch({
+    userId: authUserId
+  });
 
   const followingUsers = await helpers.follows.getAuthFollowingUsers.fetch();
 
