@@ -89,7 +89,9 @@ export default function AllPostsView({
           </div>
         )}
       </div>
-      {isProfileHidden && <UserIsPrivateText className="mt-4" />}
+      {isProfileHidden && (
+        <UserIsPrivateText className="mt-4 flex justify-center text-center" />
+      )}
       {posts.map((post, index) => (
         <div
           className={cn('mt-10 flex flex-col pb-8', index < posts.length - 1)}

@@ -92,7 +92,9 @@ export default function PostCarouselView({
   const isCurrentUser = user.id === authUser?.id;
 
   if (isProfileHidden) {
-    return <UserIsPrivateText className="mt-4" />;
+    return (
+      <UserIsPrivateText className="mt-4 flex flex-col justify-center text-center" />
+    );
   }
 
   if (isLoading) {
