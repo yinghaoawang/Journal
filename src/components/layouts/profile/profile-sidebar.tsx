@@ -149,7 +149,7 @@ export default function ProfileSidebar({
     trpc.profile.isUserHiddenToAuth.useQuery({
       userId: user.id
     });
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) return <></>;
   return (
     <div className={cn('shrink-0 px-8 py-4', className)}>
       <UserDetails user={user} />

@@ -183,7 +183,7 @@ const MutatePostView = ({
       </div>
       <div className="flex justify-between">
         <button
-          className="flex w-40 items-center justify-center rounded-lg bg-black-pearl-600 p-4 text-white"
+          className="flex w-36 items-center justify-center rounded-lg bg-black-pearl-600 p-2 text-white sm:w-40 sm:py-4"
           onClick={() => {
             if (type === 'create') {
               createPost({ content: textInput });
@@ -197,24 +197,26 @@ const MutatePostView = ({
           disabled={isLoading}
         >
           {isLoading && <LoadingSpinner size={20} />}
-          {!isLoading &&
-            (type === 'create' ? 'Create New Post' : 'Update Post')}
+          {!isLoading && (type === 'create' ? 'Create Post' : 'Update Post')}
         </button>
         {type === 'create' && (
-          <div className="flex items-start gap-4">
+          <div className="flex flex-col items-end gap-0 sm:flex-row sm:items-start sm:justify-start sm:gap-2">
             {isUpsertingDraft && (
               <span className="text-gray-600">Saving...</span>
             )}
             {!isUpsertingDraft && (
-              <span className="text-gray-600">
-                <span className="mr-1">Draft last saved</span>
-                <span className="font-light">
+              <>
+                <span className="ml-3 text-gray-600 sm:ml-0">
+                  Draft last saved
+                </span>
+                <span className="font-light text-gray-600 sm:mr-2">
                   {dayjs(draftLastSaved).format('h:mm:ssA')}
                 </span>
-              </span>
+              </>
             )}
             <button
               className={cn(
+                'hidden sm:block',
                 isUpsertingDraft ? 'text-gray-400' : 'text-blue-500'
               )}
               disabled={isUpsertingDraft}
