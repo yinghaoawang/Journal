@@ -122,6 +122,21 @@ export const postsRouter = router({
           content: input.content
         }
       });
+
+      // delete draft if exists
+      const draft = await ctx.db.draft.findFirst({
+        where: {
+          userId: authUserId
+        }
+      });
+      if (draft) {
+        await ctx.db.draft.delete({
+          where: {
+            id: draft.id
+          }
+        });
+      }
+
       return post;
     }),
   update: privateProcedure
