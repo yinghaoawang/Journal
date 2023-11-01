@@ -117,14 +117,14 @@ const MutatePostView = ({
     upsertDraft({ content: textInput });
   }, [textInput]);
 
-  const onUpsertSuccess = () => {
+  const onUpsertSuccess = async () => {
     setTextInput('');
     toast.success(
       `Post ${type === 'create' ? 'created' : 'edited'} successfully!`
     );
     stateData.successUpsertedPost = true;
+    await utils.posts.invalidate();
     void router.push('/journal');
-    void utils.posts.invalidate();
   };
   const onUpsertError = (errorMessage?: string) => {
     if (errorMessage) {

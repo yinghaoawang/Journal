@@ -90,7 +90,7 @@ export default function Navbar({
               <SignOutButton>
                 <div className="flex items-center">
                   <LuLogOut size={22} className="sm:hidden" />
-                  <span className="hidden sm:inline-block">Sign Out</span>
+                  <button className="hidden sm:inline-block">Sign Out</button>
                 </div>
               </SignOutButton>
             </>
