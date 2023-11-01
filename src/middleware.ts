@@ -1,4 +1,5 @@
 import { authMiddleware, clerkClient } from '@clerk/nextjs';
+import { redirectToSignIn } from '@clerk/nextjs/server';
 
 const setUserDefaults = async (userId: string) => {
   const user = await clerkClient.users.getUser(userId);
@@ -13,9 +14,11 @@ const setUserDefaults = async (userId: string) => {
 
 export default authMiddleware({
   publicRoutes: ['/', '/feed', '/user/(.*)', '/explore'],
-  afterAuth(auth) {
+  afterAuth(auth, req) {
     const { userId } = auth;
-    if (userId == null) return;
+    if (userId == null) {
+      return redirectToSignIn({ returnBackUrl: req.url });
+    }
     void setUserDefaults(userId);
   }
 });
