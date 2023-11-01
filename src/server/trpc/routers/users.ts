@@ -25,6 +25,7 @@ export type FilteredUser = {
   isPublic: boolean;
   displayName: string | null;
   description: string | null;
+  isLegacyJournal: boolean | null;
 };
 
 /**
@@ -44,7 +45,8 @@ export const filterHiddenUserForClient = (user: User): FilteredUser => {
     ...hiddenUser,
     imageUrl: null,
     lastName: null,
-    description: null
+    description: null,
+    isLegacyJournal: null
   };
 };
 
@@ -58,7 +60,8 @@ export const filterUserForClient = (user: User): FilteredUser => {
     createdAt,
     isPublic: publicMetadata?.isPublic ? true : false,
     displayName: publicMetadata?.displayName as string | null,
-    description: publicMetadata?.description as string | null
+    description: publicMetadata?.description as string | null,
+    isLegacyJournal: (publicMetadata?.isLegacyJournal as boolean) ? true : false
   };
 };
 

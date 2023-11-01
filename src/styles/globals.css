@@ -5,10 +5,10 @@
 :root {
   --navbar-height: 60px;
   --footer-height: 60px;
-  /* --j-line-height: 42px;
-  --j-line-offset: 9px;
-  --j-line-size: 2px;
-  --j-line-color: lightgray; */
+  --legacy-line-height: 42px;
+  --legacy-line-offset: 9px;
+  --legacy-line-size: 2px;
+  --legacy-line-color: lightgray;
 }
 
 body {
@@ -27,7 +27,7 @@ body {
   @apply my-0;
 }
 
-/* .journal {
+.journal {
   @apply journal-lines whitespace-pre-wrap;
 }
 
@@ -36,18 +36,25 @@ body {
 }
 
 .journal-lines {
-  line-height: var(--j-line-height);
+  line-height: var(--legacy-line-height);
   padding-block: 0;
   background: repeating-linear-gradient(
     to bottom,
-    transparent 0 calc(var(--j-line-height) - var(--j-line-offset)),
-    var(--j-line-color) calc(var(--j-line-height) - var(--j-line-offset))
-      calc(var(--j-line-height) - var(--j-line-offset) + var(--j-line-size)),
+    transparent 0 calc(var(--legacy-line-height) - var(--legacy-line-offset)),
+    var(--legacy-line-color)
+      calc(var(--legacy-line-height) - var(--legacy-line-offset))
+      calc(
+        var(--legacy-line-height) - var(--legacy-line-offset) +
+          var(--legacy-line-size)
+      ),
     transparent
-      calc(var(--j-line-height) - var(--j-line-offset) + var(--j-line-size))
-      var(--j-line-height)
+      calc(
+        var(--legacy-line-height) - var(--legacy-line-offset) +
+          var(--legacy-line-size)
+      )
+      var(--legacy-line-height)
   );
-} */
+}
 
 .landing-sign-in-button-container > button {
   @apply w-[200px] items-stretch justify-stretch rounded-3xl bg-green-500 px-5 py-3 font-semibold text-gray-100;

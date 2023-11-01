@@ -11,6 +11,7 @@ import { type FilteredUser } from '~/server/trpc/routers/users';
 import { UserIsPrivateText } from '../utils';
 import { MDXEditor } from '../mdx/mdx-editor';
 import { READONLY_PLUGINS } from '../mdx/_boilerplate';
+import LegacyJournalDisplay from './legacy-journal/legacy-journal-display';
 
 const UserActionLinks = ({ post }: { post: Post }) => {
   const utils = trpc.useContext();
@@ -163,21 +164,26 @@ export default function PostCarouselView({
             {isCurrentUser && <UserActionLinks post={currentPost} />}
           </div>
 
-          <h2 className="my-4 font-bold">
-            {dayjs(currentPost?.createdAt ?? Date.now()).format(
-              'MMMM DD, YYYY'
-            )}
-          </h2>
-          <div className="rounded-lg border border-gray-300">
-            <MDXEditor
-              key={currentPost.id}
-              contentEditableClassName="prose"
-              markdown={currentPost.content}
-              autoFocus={true}
-              readOnly={true}
-              plugins={READONLY_PLUGINS}
-            />
-          </div>
+          {user.isLegacyJournal && <LegacyJournalDisplay post={currentPost} />}
+          {!user.isLegacyJournal && (
+            <>
+              <h2 className="my-4 font-bold">
+                {dayjs(currentPost?.createdAt ?? Date.now()).format(
+                  'MMMM DD, YYYY'
+                )}
+              </h2>
+              <div className="rounded-lg border border-gray-300">
+                <MDXEditor
+                  key={currentPost.id}
+                  contentEditableClassName="prose"
+                  markdown={currentPost.content}
+                  autoFocus={true}
+                  readOnly={true}
+                  plugins={READONLY_PLUGINS}
+                />
+              </div>
+            </>
+          )}
         </div>
       )}
     </>

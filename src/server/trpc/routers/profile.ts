@@ -65,7 +65,8 @@ export const profileRouter = router({
           .string()
           .min(0)
           .max(16, 'Display name must be less than 16 characters.'),
-        isPublic: z.boolean()
+        isPublic: z.boolean(),
+        isLegacyJournal: z.boolean()
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -75,7 +76,8 @@ export const profileRouter = router({
       return await clerkClient.users.updateUserMetadata(authUserId, {
         publicMetadata: {
           displayName: input.displayName.length > 0 ? input.displayName : null,
-          isPublic: input.isPublic
+          isPublic: input.isPublic,
+          isLegacyJournal: input.isLegacyJournal
         }
       });
     }),

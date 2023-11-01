@@ -21,9 +21,11 @@ const SettingsForm = ({
 
   const [displayName, setDisplayName] = useState('');
   const [isPublic, setIsPublic] = useState(false);
+  const [isLegacyJournal, setIsLegacyJournal] = useState(false);
   useEffect(() => {
     setDisplayName((publicMetadata.displayName as string) ?? '');
     setIsPublic((publicMetadata.isPublic as boolean) ?? false);
+    setIsLegacyJournal((publicMetadata.isLegacyJournal as boolean) ?? false);
   }, [user]);
 
   const { mutate: updateSettings, isLoading: isUpdatingSettings } =
@@ -88,10 +90,21 @@ const SettingsForm = ({
           checked={!isPublic}
         />
       </div>
+      <div className={cn(formItemClass)}>
+        <label>Use Legacy Journal</label>
+        <input
+          className="h-[17px] w-[17px]"
+          type="checkbox"
+          onChange={(event) => {
+            setIsLegacyJournal(event.target.checked);
+          }}
+          checked={isLegacyJournal}
+        />
+      </div>
       <div className="flex justify-end">
         <button
           onClick={() => {
-            updateSettings({ displayName, isPublic });
+            updateSettings({ displayName, isPublic, isLegacyJournal });
           }}
           className="button"
           disabled={isUpdatingSettings}

@@ -9,18 +9,38 @@ import { LoadingSpinner } from '../loading';
 import cn from 'classnames';
 import { MDXEditor } from '../mdx/mdx-editor';
 import { ALL_PLUGINS } from '../mdx/_boilerplate';
+import LegacyJournalEditor from './legacy-journal/legacy-journal-editor';
+import { type User } from '@clerk/nextjs/dist/types/server';
 
 export const DRAFT_SAVE_INTERVAL = 5000;
 const stateData = {
   successUpsertedPost: false
 };
 
+const scrollToCurrentElement = () => {
+  const caretNode = window?.getSelection()?.focusNode;
+  if (caretNode) {
+    let element = caretNode?.parentElement;
+
+    if (element == null) return;
+    if (caretNode.nodeType === Node.ELEMENT_NODE) {
+      element = caretNode as HTMLElement;
+    }
+    const offsetY = -50;
+    const y = element.getBoundingClientRect().top + window?.scrollY + offsetY;
+
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
+};
+
 const MutatePostView = ({
   type,
   post,
+  user,
   userDraft
 }: {
   type: 'create' | 'update';
+  user: User;
   post?: Post;
   userDraft?: Draft | null;
 }) => {
@@ -142,43 +162,34 @@ const MutatePostView = ({
           </h2>
         </div>
 
-        <div className="mb-4 mt-5">
-          <h2 className="mb-4 font-bold">
-            {dayjs(post?.createdAt ?? Date.now()).format('MMMM DD, YYYY')}
-          </h2>
-          <div className="rounded-lg border border-gray-300">
-            <MDXEditor
-              key={post?.id}
-              contentEditableClassName="!min-h-[400px] prose"
-              onChange={(markdown) => {
-                const scrollToCurrentElement = () => {
-                  const caretNode = window?.getSelection()?.focusNode;
-                  if (caretNode) {
-                    let element = caretNode?.parentElement;
-
-                    if (element == null) return;
-                    if (caretNode.nodeType === Node.ELEMENT_NODE) {
-                      element = caretNode as HTMLElement;
-                    }
-                    const offsetY = -50;
-                    const y =
-                      element.getBoundingClientRect().top +
-                      window?.scrollY +
-                      offsetY;
-
-                    window.scrollTo({ top: y, behavior: 'smooth' });
-                  }
-                };
-
-                setTextInput(markdown);
-                scrollToCurrentElement();
-              }}
-              markdown={textInput}
-              autoFocus={true}
-              readOnly={isLoading}
-              plugins={ALL_PLUGINS}
+        <div className="mb-4">
+          {user?.publicMetadata?.isLegacyJournal ? (
+            <LegacyJournalEditor
+              setTextInput={setTextInput}
+              textInput={textInput}
+              isLoading={isLoading}
             />
-          </div>
+          ) : (
+            <div className="mt-5">
+              <h2 className="mb-4 font-bold">
+                {dayjs(post?.createdAt ?? Date.now()).format('MMMM DD, YYYY')}
+              </h2>
+              <div className="rounded-lg border border-gray-300">
+                <MDXEditor
+                  key={post?.id}
+                  contentEditableClassName="!min-h-[400px] prose"
+                  onChange={(markdown) => {
+                    setTextInput(markdown);
+                    scrollToCurrentElement();
+                  }}
+                  markdown={textInput}
+                  autoFocus={true}
+                  readOnly={isLoading}
+                  plugins={ALL_PLUGINS}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <div className="flex justify-between">

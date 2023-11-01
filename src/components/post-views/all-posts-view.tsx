@@ -9,6 +9,7 @@ import { type FilteredUser } from '~/server/trpc/routers/users';
 import { UserIsPrivateText } from '../utils';
 import { READONLY_PLUGINS } from '../mdx/_boilerplate';
 import { MDXEditor } from '../mdx/mdx-editor';
+import LegacyJournalDisplay from './legacy-journal/legacy-journal-display';
 
 export default function AllPostsView({
   user,
@@ -98,19 +99,26 @@ export default function AllPostsView({
           key={post.id}
         >
           {isCurrentUser && <UserActionLinks post={post} />}
-          <h2 className="mb-4 font-bold">
-            {dayjs(post?.createdAt ?? Date.now()).format('MMMM DD, YYYY')}
-          </h2>
-          <div className="rounded-lg border border-gray-300">
-            <MDXEditor
-              key={post.id}
-              contentEditableClassName="prose"
-              markdown={post.content}
-              autoFocus={true}
-              readOnly={true}
-              plugins={READONLY_PLUGINS}
-            />
-          </div>
+
+          {user.isLegacyJournal && <LegacyJournalDisplay post={post} />}
+          {!user.isLegacyJournal && (
+            <>
+              <h2 className="mb-4 font-bold">
+                {dayjs(post?.createdAt ?? Date.now()).format('MMMM DD, YYYY')}
+              </h2>
+
+              <div className="rounded-lg border border-gray-300">
+                <MDXEditor
+                  key={post.id}
+                  contentEditableClassName="prose"
+                  markdown={post.content}
+                  autoFocus={true}
+                  readOnly={true}
+                  plugins={READONLY_PLUGINS}
+                />
+              </div>
+            </>
+          )}
         </div>
       ))}
     </>

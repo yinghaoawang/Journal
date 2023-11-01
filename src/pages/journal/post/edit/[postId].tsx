@@ -7,16 +7,17 @@ import MutatePostView from '~/components/post-views/mutate-post-view';
 import Custom404Page from '~/pages/404';
 import Layout from '~/components/layouts/layout';
 import { type Post } from '@prisma/client';
-import { getAuth } from '@clerk/nextjs/server';
+import { type User, getAuth } from '@clerk/nextjs/server';
+import { clerkClient } from '@clerk/nextjs';
 
-const EditPostPage = ({ post }: { post: Post }) => {
+const EditPostPage = ({ user, post }: { user: User; post: Post }) => {
   if (post == null) {
     return <Custom404Page />;
   }
 
   return (
     <Layout>
-      <MutatePostView type="update" post={post} />
+      <MutatePostView user={user} type="update" post={post} />
     </Layout>
   );
 };
@@ -42,14 +43,14 @@ export const getServerSideProps: GetServerSideProps = async ({
   const postId = params?.postId;
   if (typeof postId !== 'string') throw new Error('No postId in search params');
 
+  const authUser = await clerkClient.users.getUser(userId);
+
   const post = await helpers.posts.getById.fetch({ id: postId });
 
   return {
     props: {
-      post:
-        userId == post?.userId
-          ? (JSON.parse(JSON.stringify(post)) as Post)
-          : null
+      post: JSON.parse(JSON.stringify(post)) as Post,
+      user: JSON.parse(JSON.stringify(authUser)) as User
     }
   };
 };

@@ -43,14 +43,23 @@ export default function FeedContentView({
             </span>
           </div>
           <div className="max-h-[400px] overflow-auto">
-            <MDXEditor
-              key={post.id}
-              contentEditableClassName="prose"
-              markdown={post.content}
-              autoFocus={true}
-              readOnly={true}
-              plugins={READONLY_PLUGINS}
-            />
+            {user?.isLegacyJournal && (
+              <div className="journal">
+                <h2>{dayjs(post.createdAt).format('MMMM DD, YYYY')}</h2>
+                <p>Dear Journal,</p>
+                <p>{post.content}</p>
+              </div>
+            )}
+            {!user?.isLegacyJournal && (
+              <MDXEditor
+                key={post.id}
+                contentEditableClassName="prose"
+                markdown={post.content}
+                autoFocus={true}
+                readOnly={true}
+                plugins={READONLY_PLUGINS}
+              />
+            )}
           </div>
         </div>
       ))}
