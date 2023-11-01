@@ -48,13 +48,16 @@ export const feedRouter = router({
       })
     ).map((follow) => follow.followingId);
 
-    const usersFollowingBack: string[] = [];
+    const nonHiddenUsers: string[] = [];
 
     const validFollowingIds: string[] = (
       await Promise.all(
         followingIds.map(async (id) => {
           const user = await clerkClient.users.getUser(id);
-          if (user?.publicMetadata?.isPublic) return id;
+          if (user?.publicMetadata?.isPublic) {
+            nonHiddenUsers.push(id);
+            return id;
+          }
 
           const isFollowingBack =
             (await ctx.db.follow.findFirst({
@@ -65,7 +68,7 @@ export const feedRouter = router({
             })) != null;
 
           if (isFollowingBack) {
-            usersFollowingBack.push(id);
+            nonHiddenUsers.push(id);
             return id;
           }
           return null;
@@ -83,7 +86,7 @@ export const feedRouter = router({
 
       if (latestPost) {
         const rawUser = await clerkClient.users.getUser(followingId);
-        const user = usersFollowingBack.includes(followingId)
+        const user = nonHiddenUsers.includes(followingId)
           ? filterUserForClient(rawUser)
           : filterHiddenUserForClient(rawUser);
         feedContent.push({
