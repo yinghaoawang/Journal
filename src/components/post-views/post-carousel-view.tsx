@@ -174,7 +174,7 @@ export default function PostCarouselView({
               </h2>
               <div className="rounded-lg border border-gray-300">
                 <MDXEditor
-                  key={currentPost.id}
+                  key={currentPost.content}
                   contentEditableClassName="prose"
                   markdown={currentPost.content}
                   autoFocus={true}
