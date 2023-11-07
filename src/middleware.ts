@@ -13,14 +13,17 @@ const setUserDefaults = async (userId: string) => {
 };
 
 export default authMiddleware({
-  publicRoutes: ['/', '/feed', '/user/(.*)', '/explore'],
+  publicRoutes: ['/'],
   afterAuth(auth, req) {
-    const { userId } = auth;
-    if (userId == null) {
+    const { userId, isPublicRoute } = auth;
+    if (userId != null) {
+      void setUserDefaults(userId);
+    }
+
+    if (!isPublicRoute && userId == null) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return redirectToSignIn({ returnBackUrl: req.url });
     }
-    void setUserDefaults(userId);
   }
 });
 
