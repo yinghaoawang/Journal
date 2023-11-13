@@ -1,28 +1,64 @@
-# Create T3 App
+# Journal
+### A social journaling app
+![App Screenshot](https://i.imgur.com/eQ2hGNJ.png)
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Welcome to the Social Journaling app! This application is designed to help users express themselves through journaling and sharing their thoughts in a secure and personalized environment. It is built on the T3 stack, powered by Next.js 13, and leverages ClerkJS for authentication, Prisma for the database, and TRPC for the API.
 
-## What's next? How do I make an app with this?
+## Features
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+### Secure Authentication
+ClerkJS handles the authentication process, ensuring robust user authentication, allowing seamless access to the app's features.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+![Clerk](https://i.imgur.com/lTyKhLp.png)
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### Privacy Controls
+Users can toggle their account to private, limiting access to their posts, and private details solely to their followers. This ensures user privacy and control over their shared content.
 
-## Learn More
+![Privacy](https://i.imgur.com/36BRmw8.png)
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+### Social Connectivity
+Users can follow others and be followed, establishing a network where their posts are visible to followers. This allows for a personalized feed experience.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+![Social](https://i.imgur.com/JEHZqIb.png)
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+### Profile Customization
+Users can update their names, bios, and profile pictures to reflect their identity and interests.
 
-## How do I deploy this?
+## Tech Stack
+I used [T3 Stack](https://create.t3.gg/) bootstrapped with `create-t3-app`.
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## Installation
+
+To run this app locally:
+
+1. Clone the repository.
+2. Install dependencies using `npm install`.
+3. Set up the required environment variables.
+4. Run the development server with `npm run dev`.
+
+## Usage
+
+After installation, users can:
+
+- Sign up or log in securely using ClerkJS authentication.
+- Customize their profiles and toggle account privacy.
+- Follow and connect with other users.
+- Create, edit, and share journal entries.
+- Explore a personalized feed based on the people they follow.
+
+## Contribution
+
+We welcome contributions! If you'd like to improve this app, please fork the repository and create a pull request. For major changes, open an issue first to discuss potential updates.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
+
+## Acknowledgements
+
+- We'd like to express our gratitude to the open-source community for the fantastic tools and libraries used in this project.
+- Special thanks to the developers and contributors of ClerkJS, Prisma, TRPC, and Next.js for their incredible work.
+
+---
+
+Feel free to customize this README with specific details, links, and any additional information about your app!
