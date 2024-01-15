@@ -21,7 +21,7 @@ import {
   InsertTable,
   ListsToggle,
   InsertCodeBlock
-} from '@alan/editor';
+} from '@mdxeditor/editor';
 
 export async function expressImageUploadHandler(image: File) {
   const formData = new FormData();
